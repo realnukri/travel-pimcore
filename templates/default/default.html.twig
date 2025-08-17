@@ -1,0 +1,12 @@
+{% extends 'layouts/layout.html.twig' %}
+
+{% block content %}
+
+    <div id="main-content">
+        {{ pimcore_areablock('content', {
+            "group": {
+                "Image": ["image"],
+            },
+        }) }}
+    </div>
+{% endblock %}

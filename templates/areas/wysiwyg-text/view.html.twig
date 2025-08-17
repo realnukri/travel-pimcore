@@ -1,0 +1,12 @@
+<section class="wysiwyg-area container {{ editmode == 1 ? 'editmode' : 'animation animation-fade-right' }}">
+    <div class="text">
+        {% if editmode %}
+            <div class="settings-area">
+                <div class="settings-field warn">Keine Bilder im WYSIWYG-Editor verwenden!</div>
+            </div>
+        {% endif %}
+        <div class="wysiwyg-text">
+            {{ pimcore_wysiwyg("text")}}
+        </div>
+    </div>
+</section>

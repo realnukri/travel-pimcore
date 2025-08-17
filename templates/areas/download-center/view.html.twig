@@ -1,0 +1,24 @@
+<script>
+    if (!window.applicationData) {
+        window.applicationData = {};
+    }
+
+    if (!window.applicationData.language) {
+        window.applicationData.language = '{{ language }}';
+    }
+
+    window.applicationData.translations = {
+        {% for key, value in translations %}
+        "{{ key }}": "{{ value }}",
+        {% endfor %}
+    }
+</script>
+
+<div class="download-center-container container-wide">
+    <div class="download-title-container">
+        <h3>{{ 'downloadcenter.title'|trans }}</h3>
+    </div>
+    <div id="download-center">
+        loading...
+    </div>
+</div>

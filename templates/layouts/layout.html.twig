@@ -1,0 +1,20 @@
+<!doctype html>
+<html lang="{{ app.request.locale }}">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+</head>
+<body>
+{% set navigation = document.getProperty('Navigation') %}
+{% if navigation %}
+    {{ pimcore_inc(navigation) }}
+{% endif %}
+
+<main role="main">
+    {{ block('content') }}
+</main>
+
+</body>
+</html>
+
+
