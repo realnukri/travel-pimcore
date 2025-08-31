@@ -1,0 +1,328 @@
+{# Navigation Component for Pimcore #}
+{% set navigationItems = [
+    { href: '/', label: 'Startseite' },
+    { href: '/destinations', label: 'Reiseziele' },
+    { href: '/hotels', label: 'Hotels' },
+    { href: '/flights', label: 'Flüge' },
+    { href: '/restaurants', label: 'Restaurants' },
+    { href: '/about', label: 'Über uns' },
+    { href: '/contact', label: 'Kontakt' }
+] %}
+
+<style>
+    .navigation-wrapper {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid rgba(229, 231, 235, 0.4);
+        z-index: 50;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+    }
+    
+    .nav-container {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 0 1rem;
+    }
+    
+    .nav-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 64px;
+    }
+    
+    .logo-link {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        text-decoration: none;
+        transition: transform 0.3s;
+    }
+    
+    .logo-link:hover {
+        transform: translateY(-1px);
+    }
+    
+    .logo-icon {
+        padding: 0.5rem;
+        background: linear-gradient(135deg, #3B82F6 0%, #9333EA 100%);
+        border-radius: 0.5rem;
+        transition: box-shadow 0.3s;
+    }
+    
+    .logo-link:hover .logo-icon {
+        box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+    }
+    
+    .logo-text {
+        font-size: 1.25rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #3B82F6 0%, #9333EA 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+    
+    .desktop-nav {
+        display: none;
+        align-items: center;
+        gap: 2rem;
+    }
+    
+    @media (min-width: 768px) {
+        .desktop-nav {
+            display: flex;
+        }
+    }
+    
+    .nav-link {
+        color: #4B5563;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s;
+        position: relative;
+    }
+    
+    .nav-link:hover {
+        color: #3B82F6;
+    }
+    
+    .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -4px;
+        left: 0;
+        width: 0;
+        height: 2px;
+        background: #3B82F6;
+        transition: width 0.3s;
+    }
+    
+    .nav-link:hover::after {
+        width: 100%;
+    }
+    
+    .auth-buttons {
+        display: none;
+        align-items: center;
+        gap: 1rem;
+    }
+    
+    @media (min-width: 768px) {
+        .auth-buttons {
+            display: flex;
+        }
+    }
+    
+    .btn-login {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        color: #4B5563;
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s;
+    }
+    
+    .btn-login:hover {
+        color: #3B82F6;
+    }
+    
+    .btn-register {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1.5rem;
+        color: white;
+        background: linear-gradient(135deg, #3B82F6 0%, #9333EA 100%);
+        border-radius: 0.375rem;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+    
+    .btn-register:hover {
+        box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+        transform: translateY(-1px);
+    }
+    
+    .mobile-menu-btn {
+        display: block;
+        padding: 0.5rem;
+        background: none;
+        border: none;
+        cursor: pointer;
+        color: #4B5563;
+    }
+    
+    .mobile-menu-btn:hover {
+        color: #3B82F6;
+    }
+    
+    @media (min-width: 768px) {
+        .mobile-menu-btn {
+            display: none;
+        }
+    }
+    
+    .mobile-menu {
+        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: white;
+        border-top: 1px solid #E5E7EB;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .mobile-menu.active {
+        display: block;
+    }
+    
+    .mobile-nav-link {
+        display: block;
+        padding: 0.75rem 1rem;
+        color: #4B5563;
+        text-decoration: none;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    
+    .mobile-nav-link:hover {
+        background: #F3F4F6;
+        color: #3B82F6;
+    }
+    
+    .mobile-auth {
+        padding: 1rem;
+        border-top: 1px solid #E5E7EB;
+    }
+    
+    .mobile-auth a {
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+</style>
+
+<nav class="navigation-wrapper" id="main-navigation">
+    <div class="nav-container">
+        <div class="nav-content">
+            {# Logo #}
+            <a href="/" class="logo-link">
+                <div class="logo-icon">
+                    <svg width="24" height="24" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                </div>
+                <span class="logo-text">TravelExplorer</span>
+            </a>
+
+            {# Desktop Navigation #}
+            <div class="desktop-nav">
+                {% for item in navigationItems %}
+                    <a href="{{ item.href }}" class="nav-link">
+                        {{ item.label }}
+                    </a>
+                {% endfor %}
+            </div>
+
+            {# Auth Buttons #}
+            <div class="auth-buttons">
+                <a href="/login" class="btn-login">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                    </svg>
+                    Anmelden
+                </a>
+                <a href="/register" class="btn-register">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                    </svg>
+                    Registrieren
+                </a>
+            </div>
+
+            {# Mobile Menu Button #}
+            <button type="button" 
+                    class="mobile-menu-btn"
+                    aria-controls="mobile-menu"
+                    aria-expanded="false"
+                    onclick="toggleMobileMenu()">
+                <span class="sr-only">Menü öffnen</span>
+                <svg width="24" height="24" id="menu-icon-open" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+                <svg width="24" height="24" class="hidden" id="menu-icon-close" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    {# Mobile Menu #}
+    <div class="mobile-menu" id="mobile-menu">
+        {% for item in navigationItems %}
+            <a href="{{ item.href }}" class="mobile-nav-link">
+                {{ item.label }}
+            </a>
+        {% endfor %}
+        
+        <div class="mobile-auth">
+            <a href="/login" class="btn-login" style="justify-content: center; padding: 0.75rem;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1"/>
+                </svg>
+                Anmelden
+            </a>
+            <a href="/register" class="btn-register" style="justify-content: center; padding: 0.75rem;">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                </svg>
+                Registrieren
+            </a>
+        </div>
+    </div>
+</nav>
+
+{# JavaScript for mobile menu toggle #}
+<script>
+    function toggleMobileMenu() {
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuIconOpen = document.getElementById('menu-icon-open');
+        const menuIconClose = document.getElementById('menu-icon-close');
+        const menuButton = document.querySelector('[aria-controls="mobile-menu"]');
+        
+        if (mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.remove('hidden');
+            menuIconOpen.classList.add('hidden');
+            menuIconClose.classList.remove('hidden');
+            menuButton.setAttribute('aria-expanded', 'true');
+        } else {
+            mobileMenu.classList.add('hidden');
+            menuIconOpen.classList.remove('hidden');
+            menuIconClose.classList.add('hidden');
+            menuButton.setAttribute('aria-expanded', 'false');
+        }
+    }
+    
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', function(event) {
+        const nav = document.getElementById('main-navigation');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const menuButton = document.querySelector('[aria-controls="mobile-menu"]');
+        
+        if (!nav.contains(event.target) && !mobileMenu.classList.contains('hidden')) {
+            mobileMenu.classList.add('hidden');
+            document.getElementById('menu-icon-open').classList.remove('hidden');
+            document.getElementById('menu-icon-close').classList.add('hidden');
+            menuButton.setAttribute('aria-expanded', 'false');
+        }
+    });
+</script>

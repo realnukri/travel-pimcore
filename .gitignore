@@ -1,11 +1,12 @@
 # remove the following ignores for your project
 /config/pimcore/constants.php
-
+/Frontend
 # symfony default
 /.web-server-pid
 /build/
 /phpunit.xml
 /public/bundles/
+/public/var/*
 
 # local config
 /.env.local

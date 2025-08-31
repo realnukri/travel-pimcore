@@ -12,6 +12,7 @@
   },
   "prefer-stable": true,
   "require": {
+    "dachcom-digital/formbuilder": "^5.3",
     "pimcore/admin-ui-classic-bundle": "^1.0",
     "pimcore/data-hub": "^1.9",
     "pimcore/pimcore": "^11.0.4",
