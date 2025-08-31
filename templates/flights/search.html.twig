@@ -1,0 +1,290 @@
+{% extends 'layouts/layout.html.twig' %}
+
+{% block title %}Suchergebnisse - Flüge - TravelExplorer{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .search-results-header {
+        background: linear-gradient(135deg, #EBF8FF 0%, #E0E7FF 100%);
+        padding: 2rem 0;
+        margin-bottom: 2rem;
+    }
+    
+    .search-summary {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1rem;
+    }
+    
+    .search-summary h1 {
+        font-size: 2rem;
+        font-weight: 700;
+        margin: 0;
+    }
+    
+    .search-params {
+        display: flex;
+        gap: 1rem;
+        flex-wrap: wrap;
+        color: #6B7280;
+    }
+    
+    .search-param {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        background: white;
+        padding: 0.5rem 1rem;
+        border-radius: 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    .results-container {
+        display: grid;
+        gap: 1.5rem;
+    }
+    
+    .flight-card {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+    }
+    
+    .flight-card:hover {
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+    }
+    
+    .flight-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+        margin-bottom: 1rem;
+    }
+    
+    .flight-route {
+        display: flex;
+        align-items: center;
+        gap: 2rem;
+    }
+    
+    .flight-city {
+        text-align: center;
+    }
+    
+    .city-code {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1F2937;
+    }
+    
+    .city-name {
+        font-size: 0.875rem;
+        color: #6B7280;
+    }
+    
+    .flight-arrow {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: #9CA3AF;
+    }
+    
+    .flight-time {
+        font-size: 0.875rem;
+        color: #6B7280;
+    }
+    
+    .flight-price {
+        text-align: right;
+    }
+    
+    .price-amount {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #3B82F6;
+    }
+    
+    .price-label {
+        font-size: 0.75rem;
+        color: #6B7280;
+    }
+    
+    .flight-details {
+        display: flex;
+        gap: 2rem;
+        padding-top: 1rem;
+        border-top: 1px solid #E5E7EB;
+    }
+    
+    .flight-detail {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.875rem;
+        color: #6B7280;
+    }
+    
+    .book-button {
+        margin-top: 1rem;
+        width: 100%;
+        padding: 0.75rem;
+        background: linear-gradient(135deg, #3B82F6 0%, #9333EA 100%);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .book-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+    }
+    
+    .no-results {
+        text-align: center;
+        padding: 4rem 2rem;
+        background: white;
+        border-radius: 0.75rem;
+    }
+    
+    .no-results h2 {
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+    }
+    
+    .no-results p {
+        color: #6B7280;
+        margin-bottom: 2rem;
+    }
+    
+    .back-link {
+        display: inline-block;
+        padding: 0.75rem 2rem;
+        background: #3B82F6;
+        color: white;
+        text-decoration: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        transition: all 0.3s;
+    }
+    
+    .back-link:hover {
+        background: #2563EB;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="search-results-header">
+    <div class="container">
+        <div class="search-summary">
+            <h1>Suchergebnisse</h1>
+        </div>
+        <div class="search-params">
+            {% if searchParams.departure %}
+            <div class="search-param">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                </svg>
+                Von: {{ searchParams.departure }}
+            </div>
+            {% endif %}
+            {% if searchParams.arrival %}
+            <div class="search-param">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                </svg>
+                Nach: {{ searchParams.arrival }}
+            </div>
+            {% endif %}
+            {% if searchParams.departureDate %}
+            <div class="search-param">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                Hinflug: {{ searchParams.departureDate|date('d.m.Y') }}
+            </div>
+            {% endif %}
+            {% if searchParams.returnDate %}
+            <div class="search-param">
+                <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                </svg>
+                Rückflug: {{ searchParams.returnDate|date('d.m.Y') }}
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    {% if searchResults is not empty %}
+    <div class="results-container">
+        {% for flight in searchResults %}
+        <div class="flight-card">
+            <div class="flight-header">
+                <div class="flight-route">
+                    <div class="flight-city">
+                        <div class="city-code">{{ flight.getDepartureCode()|default('XXX') }}</div>
+                        <div class="city-name">{{ flight.getDepartureCity() }}</div>
+                        <div class="flight-time">{{ flight.getDepartureTime()|default('00:00') }}</div>
+                    </div>
+                    <div class="flight-arrow">
+                        <span>━━━</span>
+                        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                        <span>━━━</span>
+                    </div>
+                    <div class="flight-city">
+                        <div class="city-code">{{ flight.getArrivalCode()|default('XXX') }}</div>
+                        <div class="city-name">{{ flight.getArrivalCity() }}</div>
+                        <div class="flight-time">{{ flight.getArrivalTime()|default('00:00') }}</div>
+                    </div>
+                </div>
+                <div class="flight-price">
+                    <div class="price-amount">€{{ flight.getPrice() }}</div>
+                    <div class="price-label">pro Person</div>
+                </div>
+            </div>
+            
+            <div class="flight-details">
+                <div class="flight-detail">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    Flugdauer: {{ flight.getDuration()|default('N/A') }}
+                </div>
+                <div class="flight-detail">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
+                    </svg>
+                    {{ flight.getAirline() }}
+                </div>
+                <div class="flight-detail">
+                    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z"/>
+                    </svg>
+                    Flugnummer: {{ flight.getFlightNumber()|default('N/A') }}
+                </div>
+            </div>
+            
+            <button class="book-button">Jetzt buchen</button>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="no-results">
+        <h2>Keine Flüge gefunden</h2>
+        <p>Leider konnten wir keine Flüge für Ihre Suchanfrage finden. Bitte versuchen Sie es mit anderen Suchkriterien.</p>
+        <a href="{{ path('flights') }}" class="back-link">Neue Suche starten</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

@@ -19,8 +19,8 @@
  * - activities [block]
  * -- activityTitle [input]
  * -- activityDescription [textarea]
- * - bestTime [input]
- * - climate [input]
+ * -- bestTime [input]
+ * -- climate [input]
  */
 
 return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
@@ -30,7 +30,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1756654227,
+   'modificationDate' => 1756655789,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -186,33 +186,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-        ),
-         'locked' => false,
-         'blockedVarsForExport' => 
-        array (
-        ),
-         'fieldtype' => 'panel',
-         'layout' => NULL,
-         'border' => false,
-         'icon' => '',
-         'labelWidth' => 100,
-         'labelAlign' => 'left',
-      )),
-      1 => 
-      \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
-         'name' => 'Layout',
-         'type' => NULL,
-         'region' => NULL,
-         'title' => 'Preis und Bewertung',
-         'width' => '',
-         'height' => '',
-         'collapsible' => false,
-         'collapsed' => false,
-         'bodyStyle' => '',
-         'datatype' => 'layout',
-         'children' => 
-        array (
-          0 => 
+          4 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
              'name' => 'price',
              'title' => 'Preis',
@@ -242,7 +216,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-          1 => 
+          5 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
              'name' => 'rating',
              'title' => 'Bewertung',
@@ -272,7 +246,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-          2 => 
+          6 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
              'name' => 'reviews',
              'title' => 'Anzahl Bewertungen',
@@ -302,33 +276,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-        ),
-         'locked' => false,
-         'blockedVarsForExport' => 
-        array (
-        ),
-         'fieldtype' => 'panel',
-         'layout' => NULL,
-         'border' => false,
-         'icon' => '',
-         'labelWidth' => 100,
-         'labelAlign' => 'left',
-      )),
-      2 => 
-      \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
-         'name' => 'Layout',
-         'type' => NULL,
-         'region' => NULL,
-         'title' => 'Beschreibungen',
-         'width' => '',
-         'height' => '',
-         'collapsible' => false,
-         'collapsed' => false,
-         'bodyStyle' => '',
-         'datatype' => 'layout',
-         'children' => 
-        array (
-          0 => 
+          7 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Textarea::__set_state(array(
              'name' => 'description',
              'title' => 'Kurzbeschreibung',
@@ -353,7 +301,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'height' => 150,
              'width' => '',
           )),
-          1 => 
+          8 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Wysiwyg::__set_state(array(
              'name' => 'longDescription',
              'title' => 'Ausführliche Beschreibung',
@@ -378,33 +326,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'height' => 400,
              'width' => '',
           )),
-        ),
-         'locked' => false,
-         'blockedVarsForExport' => 
-        array (
-        ),
-         'fieldtype' => 'panel',
-         'layout' => NULL,
-         'border' => false,
-         'icon' => '',
-         'labelWidth' => 100,
-         'labelAlign' => 'left',
-      )),
-      3 => 
-      \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
-         'name' => 'Layout',
-         'type' => NULL,
-         'region' => NULL,
-         'title' => 'Bilder und Medien',
-         'width' => '',
-         'height' => '',
-         'collapsible' => false,
-         'collapsed' => false,
-         'bodyStyle' => '',
-         'datatype' => 'layout',
-         'children' => 
-        array (
-          0 => 
+          9 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ImageGallery::__set_state(array(
              'name' => 'images',
              'title' => 'Bildergalerie',
@@ -430,33 +352,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'height' => 500,
              'width' => 500,
           )),
-        ),
-         'locked' => false,
-         'blockedVarsForExport' => 
-        array (
-        ),
-         'fieldtype' => 'panel',
-         'layout' => NULL,
-         'border' => false,
-         'icon' => '',
-         'labelWidth' => 100,
-         'labelAlign' => 'left',
-      )),
-      4 => 
-      \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
-         'name' => 'Layout',
-         'type' => NULL,
-         'region' => NULL,
-         'title' => 'Highlights und Aktivitäten',
-         'width' => '',
-         'height' => '',
-         'collapsible' => false,
-         'collapsed' => false,
-         'bodyStyle' => '',
-         'datatype' => 'layout',
-         'children' => 
-        array (
-          0 => 
+          10 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
              'name' => 'highlights',
              'title' => 'Highlights',
@@ -569,7 +465,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'optionsProviderClass' => '',
              'optionsProviderData' => '',
           )),
-          1 => 
+          11 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Block::__set_state(array(
              'name' => 'activities',
              'title' => 'Aktivitäten',
@@ -652,98 +548,72 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
                  'height' => 150,
                  'width' => '',
               )),
+              2 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+                 'name' => 'bestTime',
+                 'title' => 'Beste Reisezeit',
+                 'tooltip' => 'Beste Reisezeit für dieses Ziel',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => true,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'defaultValue' => NULL,
+                 'columnLength' => 255,
+                 'regex' => '',
+                 'regexFlags' => 
+                array (
+                ),
+                 'unique' => false,
+                 'showCharCount' => false,
+                 'width' => '',
+                 'defaultValueGenerator' => '',
+              )),
+              3 => 
+              \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+                 'name' => 'climate',
+                 'title' => 'Klima',
+                 'tooltip' => 'Klimainformationen',
+                 'mandatory' => false,
+                 'noteditable' => false,
+                 'index' => false,
+                 'locked' => false,
+                 'style' => '',
+                 'permissions' => NULL,
+                 'fieldtype' => '',
+                 'relationType' => false,
+                 'invisible' => false,
+                 'visibleGridView' => true,
+                 'visibleSearch' => false,
+                 'blockedVarsForExport' => 
+                array (
+                ),
+                 'defaultValue' => NULL,
+                 'columnLength' => 255,
+                 'regex' => '',
+                 'regexFlags' => 
+                array (
+                ),
+                 'unique' => false,
+                 'showCharCount' => false,
+                 'width' => '',
+                 'defaultValueGenerator' => '',
+              )),
             ),
              'layout' => NULL,
              'referencedFields' => 
             array (
             ),
              'fieldDefinitionsCache' => NULL,
-          )),
-        ),
-         'locked' => false,
-         'blockedVarsForExport' => 
-        array (
-        ),
-         'fieldtype' => 'panel',
-         'layout' => NULL,
-         'border' => false,
-         'icon' => '',
-         'labelWidth' => 100,
-         'labelAlign' => 'left',
-      )),
-      5 => 
-      \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
-         'name' => 'Layout',
-         'type' => NULL,
-         'region' => NULL,
-         'title' => 'Reiseinformationen',
-         'width' => '',
-         'height' => '',
-         'collapsible' => false,
-         'collapsed' => false,
-         'bodyStyle' => '',
-         'datatype' => 'layout',
-         'children' => 
-        array (
-          0 => 
-          \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
-             'name' => 'bestTime',
-             'title' => 'Beste Reisezeit',
-             'tooltip' => 'Beste Reisezeit für dieses Ziel',
-             'mandatory' => false,
-             'noteditable' => false,
-             'index' => false,
-             'locked' => false,
-             'style' => '',
-             'permissions' => NULL,
-             'fieldtype' => '',
-             'relationType' => false,
-             'invisible' => false,
-             'visibleGridView' => true,
-             'visibleSearch' => false,
-             'blockedVarsForExport' => 
-            array (
-            ),
-             'defaultValue' => NULL,
-             'columnLength' => 255,
-             'regex' => '',
-             'regexFlags' => 
-            array (
-            ),
-             'unique' => false,
-             'showCharCount' => false,
-             'width' => '',
-             'defaultValueGenerator' => '',
-          )),
-          1 => 
-          \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
-             'name' => 'climate',
-             'title' => 'Klima',
-             'tooltip' => 'Klimainformationen',
-             'mandatory' => false,
-             'noteditable' => false,
-             'index' => false,
-             'locked' => false,
-             'style' => '',
-             'permissions' => NULL,
-             'fieldtype' => '',
-             'relationType' => false,
-             'invisible' => false,
-             'visibleGridView' => true,
-             'visibleSearch' => false,
-             'blockedVarsForExport' => 
-            array (
-            ),
-             'defaultValue' => NULL,
-             'columnLength' => 255,
-             'regex' => '',
-             'regexFlags' => 
-            array (
-            ),
-             'unique' => false,
-             'showCharCount' => false,
-             'width' => '',
-             'defaultValueGenerator' => '',
           )),
         ),
          'locked' => false,
@@ -802,6 +672,66 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'enableGridLocking' => false,
    'deletedDataComponents' => 
   array (
+    0 => 
+    \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+       'name' => 'bestTime',
+       'title' => 'Beste Reisezeit',
+       'tooltip' => 'Beste Reisezeit für dieses Ziel',
+       'mandatory' => false,
+       'noteditable' => false,
+       'index' => false,
+       'locked' => false,
+       'style' => '',
+       'permissions' => NULL,
+       'fieldtype' => '',
+       'relationType' => false,
+       'invisible' => false,
+       'visibleGridView' => true,
+       'visibleSearch' => false,
+       'blockedVarsForExport' => 
+      array (
+      ),
+       'defaultValue' => NULL,
+       'columnLength' => 255,
+       'regex' => '',
+       'regexFlags' => 
+      array (
+      ),
+       'unique' => false,
+       'showCharCount' => false,
+       'width' => '',
+       'defaultValueGenerator' => '',
+    )),
+    1 => 
+    \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
+       'name' => 'climate',
+       'title' => 'Klima',
+       'tooltip' => 'Klimainformationen',
+       'mandatory' => false,
+       'noteditable' => false,
+       'index' => false,
+       'locked' => false,
+       'style' => '',
+       'permissions' => NULL,
+       'fieldtype' => '',
+       'relationType' => false,
+       'invisible' => false,
+       'visibleGridView' => true,
+       'visibleSearch' => false,
+       'blockedVarsForExport' => 
+      array (
+      ),
+       'defaultValue' => NULL,
+       'columnLength' => 255,
+       'regex' => '',
+       'regexFlags' => 
+      array (
+      ),
+       'unique' => false,
+       'showCharCount' => false,
+       'width' => '',
+       'defaultValueGenerator' => '',
+    )),
   ),
    'blockedVarsForExport' => 
   array (

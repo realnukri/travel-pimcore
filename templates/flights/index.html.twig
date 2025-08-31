@@ -1,0 +1,323 @@
+{% extends 'layouts/layout.html.twig' %}
+
+{% block title %}Flüge - TravelExplorer{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .hero-section {
+        padding-top: 2rem;
+        padding-bottom: 4rem;
+        background: linear-gradient(135deg, #EBF8FF 0%, #E0E7FF 100%);
+    }
+    
+    .search-widget {
+        background: white;
+        border-radius: 1rem;
+        padding: 2rem;
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+        margin-top: 2rem;
+    }
+    
+    .search-form {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: 1fr;
+    }
+    
+    @media (min-width: 768px) {
+        .search-form {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (min-width: 1024px) {
+        .search-form {
+            grid-template-columns: repeat(5, 1fr);
+        }
+    }
+    
+    .form-group {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .form-label {
+        font-size: 0.875rem;
+        font-weight: 500;
+        color: #4B5563;
+        margin-bottom: 0.5rem;
+    }
+    
+    .form-input {
+        padding: 0.75rem;
+        border: 1px solid #E5E7EB;
+        border-radius: 0.5rem;
+        font-size: 1rem;
+        transition: all 0.2s;
+    }
+    
+    .form-input:focus {
+        outline: none;
+        border-color: #3B82F6;
+        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    }
+    
+    .search-button {
+        grid-column: span 1;
+        padding: 0.75rem 2rem;
+        background: linear-gradient(135deg, #3B82F6 0%, #9333EA 100%);
+        color: white;
+        border: none;
+        border-radius: 0.5rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        align-self: end;
+    }
+    
+    @media (min-width: 1024px) {
+        .search-button {
+            grid-column: span 1;
+        }
+    }
+    
+    .search-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+    }
+    
+    .destination-card {
+        background: white;
+        border-radius: 0.75rem;
+        padding: 1.5rem;
+        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+        transition: all 0.3s;
+        cursor: pointer;
+    }
+    
+    .destination-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
+    }
+    
+    .destination-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1rem;
+    }
+    
+    .destination-flag {
+        font-size: 3rem;
+    }
+    
+    .destination-price {
+        text-align: right;
+    }
+    
+    .price-amount {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #3B82F6;
+    }
+    
+    .price-label {
+        font-size: 0.75rem;
+        color: #6B7280;
+    }
+    
+    .destination-info h3 {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.25rem;
+    }
+    
+    .destination-country {
+        color: #6B7280;
+    }
+    
+    .features-section {
+        background: #FAFAFA;
+        padding: 4rem 0;
+    }
+    
+    .features-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    
+    @media (min-width: 768px) {
+        .features-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    
+    @media (min-width: 1024px) {
+        .features-grid {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+    
+    .feature-item {
+        text-align: center;
+    }
+    
+    .feature-icon {
+        width: 64px;
+        height: 64px;
+        background: rgba(59, 130, 246, 0.1);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1rem;
+    }
+    
+    .feature-icon svg {
+        width: 32px;
+        height: 32px;
+        stroke: #3B82F6;
+    }
+    
+    .feature-title {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+    }
+    
+    .feature-description {
+        color: #6B7280;
+        line-height: 1.6;
+    }
+    
+    .section-title {
+        font-size: 2rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    {# Hero Section #}
+    <section class="hero-section">
+        <div class="text-center">
+            <h1 style="font-size: 3rem; font-weight: 700; margin-bottom: 1.5rem;">
+                Finden Sie Ihren perfekten Flug
+            </h1>
+            <p style="font-size: 1.25rem; color: #6B7280; max-width: 48rem; margin: 0 auto;">
+                Entdecken Sie die Welt mit unseren günstigen Flugpreisen. 
+                Vergleichen Sie Hunderte von Airlines und finden Sie die besten Deals.
+            </p>
+        </div>
+        
+        {# Flight Search Widget #}
+        <div class="search-widget">
+            <form action="{{ path('flights_search') }}" method="GET" class="search-form">
+                <div class="form-group">
+                    <label class="form-label" for="departure">Von</label>
+                    <input type="text" 
+                           id="departure" 
+                           name="departure" 
+                           class="form-input" 
+                           placeholder="Abflugort"
+                           required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="arrival">Nach</label>
+                    <input type="text" 
+                           id="arrival" 
+                           name="arrival" 
+                           class="form-input" 
+                           placeholder="Zielort"
+                           required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="departure_date">Hinflug</label>
+                    <input type="date" 
+                           id="departure_date" 
+                           name="departure_date" 
+                           class="form-input"
+                           required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label" for="return_date">Rückflug</label>
+                    <input type="date" 
+                           id="return_date" 
+                           name="return_date" 
+                           class="form-input">
+                </div>
+                
+                <button type="submit" class="search-button">
+                    Flüge suchen
+                </button>
+            </form>
+        </div>
+    </section>
+    
+    {# Popular Destinations #}
+    <section style="padding: 4rem 0;">
+        <h2 class="section-title">Beliebte Reiseziele</h2>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
+            {% for destination in popularDestinations %}
+            <div class="destination-card">
+                <div class="destination-header">
+                    <div class="destination-flag">{{ destination.image }}</div>
+                    <div class="destination-price">
+                        <div class="price-amount">{{ destination.price }}</div>
+                        <div class="price-label">pro Person</div>
+                    </div>
+                </div>
+                <div class="destination-info">
+                    <h3>{{ destination.city }}</h3>
+                    <p class="destination-country">{{ destination.country }}</p>
+                    {% if destination.airline %}
+                    <p style="margin-top: 0.5rem; font-size: 0.875rem; color: #9CA3AF;">
+                        mit {{ destination.airline }}
+                    </p>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+    
+    {# Features #}
+    <section class="features-section">
+        <h2 class="section-title">Warum bei uns buchen?</h2>
+        <div class="features-grid">
+            {% for feature in features %}
+            <div class="feature-item">
+                <div class="feature-icon">
+                    {% if feature.icon == 'plane' %}
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+                    </svg>
+                    {% elseif feature.icon == 'clock' %}
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    {% elseif feature.icon == 'star' %}
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                    </svg>
+                    {% elseif feature.icon == 'trending-up' %}
+                    <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                    </svg>
+                    {% endif %}
+                </div>
+                <h3 class="feature-title">{{ feature.title }}</h3>
+                <p class="feature-description">{{ feature.description }}</p>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

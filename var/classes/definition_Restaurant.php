@@ -31,7 +31,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
    'title' => '',
    'description' => '',
    'creationDate' => NULL,
-   'modificationDate' => 1756654231,
+   'modificationDate' => 1756655751,
    'userOwner' => 2,
    'userModification' => 2,
    'parentClass' => '',
@@ -295,33 +295,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-        ),
-         'locked' => false,
-         'blockedVarsForExport' => 
-        array (
-        ),
-         'fieldtype' => 'panel',
-         'layout' => NULL,
-         'border' => false,
-         'icon' => '',
-         'labelWidth' => 100,
-         'labelAlign' => 'left',
-      )),
-      1 => 
-      \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
-         'name' => 'Layout',
-         'type' => NULL,
-         'region' => NULL,
-         'title' => 'Standort und Kontakt',
-         'width' => '',
-         'height' => '',
-         'collapsible' => false,
-         'collapsed' => false,
-         'bodyStyle' => '',
-         'datatype' => 'layout',
-         'children' => 
-        array (
-          0 => 
+          5 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
              'name' => 'location',
              'title' => 'Standort',
@@ -351,7 +325,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-          1 => 
+          6 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
              'name' => 'address',
              'title' => 'Adresse',
@@ -381,7 +355,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-          2 => 
+          7 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
              'name' => 'phone',
              'title' => 'Telefonnummer',
@@ -411,7 +385,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-          3 => 
+          8 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
              'name' => 'website',
              'title' => 'Website',
@@ -441,7 +415,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-          4 => 
+          9 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Input::__set_state(array(
              'name' => 'openingHours',
              'title' => 'Öffnungszeiten',
@@ -471,33 +445,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-        ),
-         'locked' => false,
-         'blockedVarsForExport' => 
-        array (
-        ),
-         'fieldtype' => 'panel',
-         'layout' => NULL,
-         'border' => false,
-         'icon' => '',
-         'labelWidth' => 100,
-         'labelAlign' => 'left',
-      )),
-      2 => 
-      \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
-         'name' => 'Layout',
-         'type' => NULL,
-         'region' => NULL,
-         'title' => 'Bewertung und Preis',
-         'width' => '',
-         'height' => '',
-         'collapsible' => false,
-         'collapsed' => false,
-         'bodyStyle' => '',
-         'datatype' => 'layout',
-         'children' => 
-        array (
-          0 => 
+          10 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
              'name' => 'rating',
              'title' => 'Bewertung',
@@ -527,7 +475,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-          1 => 
+          11 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
              'name' => 'reviewCount',
              'title' => 'Anzahl Bewertungen',
@@ -557,7 +505,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-          2 => 
+          12 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Select::__set_state(array(
              'name' => 'priceRange',
              'title' => 'Preiskategorie',
@@ -608,7 +556,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'optionsProviderClass' => '',
              'optionsProviderData' => '',
           )),
-          3 => 
+          13 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Numeric::__set_state(array(
              'name' => 'seatingCapacity',
              'title' => 'Sitzplätze',
@@ -638,33 +586,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'width' => '',
              'defaultValueGenerator' => '',
           )),
-        ),
-         'locked' => false,
-         'blockedVarsForExport' => 
-        array (
-        ),
-         'fieldtype' => 'panel',
-         'layout' => NULL,
-         'border' => false,
-         'icon' => '',
-         'labelWidth' => 100,
-         'labelAlign' => 'left',
-      )),
-      3 => 
-      \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
-         'name' => 'Layout',
-         'type' => NULL,
-         'region' => NULL,
-         'title' => 'Bilder',
-         'width' => '',
-         'height' => '',
-         'collapsible' => false,
-         'collapsed' => false,
-         'bodyStyle' => '',
-         'datatype' => 'layout',
-         'children' => 
-        array (
-          0 => 
+          14 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\ImageGallery::__set_state(array(
              'name' => 'images',
              'title' => 'Bildergalerie',
@@ -690,33 +612,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'height' => 500,
              'width' => 500,
           )),
-        ),
-         'locked' => false,
-         'blockedVarsForExport' => 
-        array (
-        ),
-         'fieldtype' => 'panel',
-         'layout' => NULL,
-         'border' => false,
-         'icon' => '',
-         'labelWidth' => 100,
-         'labelAlign' => 'left',
-      )),
-      4 => 
-      \Pimcore\Model\DataObject\ClassDefinition\Layout\Panel::__set_state(array(
-         'name' => 'Layout',
-         'type' => NULL,
-         'region' => NULL,
-         'title' => 'Features und Spezialitäten',
-         'width' => '',
-         'height' => '',
-         'collapsible' => false,
-         'collapsed' => false,
-         'bodyStyle' => '',
-         'datatype' => 'layout',
-         'children' => 
-        array (
-          0 => 
+          15 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
              'name' => 'features',
              'title' => 'Features',
@@ -839,7 +735,7 @@ return \Pimcore\Model\DataObject\ClassDefinition::__set_state(array(
              'optionsProviderClass' => '',
              'optionsProviderData' => '',
           )),
-          1 => 
+          16 => 
           \Pimcore\Model\DataObject\ClassDefinition\Data\Multiselect::__set_state(array(
              'name' => 'specialties',
              'title' => 'Spezialitäten',
