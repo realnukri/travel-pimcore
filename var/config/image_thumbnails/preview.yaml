@@ -1,0 +1,27 @@
+pimcore:
+    assets:
+        image:
+            thumbnails:
+                definitions:
+                    preview:
+                        items:
+                            -
+                                method: scaleByWidth
+                                arguments:
+                                    width: 800
+                                    forceResize: false
+                        medias: {  }
+                        name: preview
+                        description: 'Preview images'
+                        group: ''
+                        format: JPEG
+                        quality: 75
+                        highResolution: null
+                        preserveColor: false
+                        forceProcessICCProfiles: false
+                        preserveMetaData: false
+                        rasterizeSVG: false
+                        downloadable: false
+                        modificationDate: 1757266370
+                        creationDate: 1757266370
+                        preserveAnimation: false

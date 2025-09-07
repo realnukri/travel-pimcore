@@ -1,0 +1,29 @@
+pimcore:
+    assets:
+        image:
+            thumbnails:
+                definitions:
+                    content:
+                        items:
+                            -
+                                method: cover
+                                arguments:
+                                    width: 400
+                                    height: 250
+                                    positioning: center
+                                    forceResize: false
+                        medias: {  }
+                        name: content
+                        description: 'Content images for destination cards'
+                        group: ''
+                        format: JPEG
+                        quality: 85
+                        highResolution: 2.0
+                        preserveColor: false
+                        forceProcessICCProfiles: false
+                        preserveMetaData: false
+                        rasterizeSVG: false
+                        downloadable: false
+                        modificationDate: 1757266370
+                        creationDate: 1757266370
+                        preserveAnimation: false

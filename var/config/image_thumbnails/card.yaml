@@ -1,0 +1,29 @@
+pimcore:
+    assets:
+        image:
+            thumbnails:
+                definitions:
+                    card:
+                        items:
+                            -
+                                method: cover
+                                arguments:
+                                    width: 600
+                                    height: 400
+                                    positioning: center
+                                    forceResize: false
+                        medias: {  }
+                        name: card
+                        description: 'Card images for destination grid'
+                        group: ''
+                        format: JPEG
+                        quality: 85
+                        highResolution: null
+                        preserveColor: false
+                        forceProcessICCProfiles: false
+                        preserveMetaData: false
+                        rasterizeSVG: false
+                        downloadable: false
+                        modificationDate: 1757266370
+                        creationDate: 1757266370
+                        preserveAnimation: false

@@ -1,0 +1,14 @@
+{
+  "name": "travel-pimcore",
+  "version": "1.0.0",
+  "description": "Travel Pimcore Project",
+  "scripts": {
+    "build-css": "sass assets/scss/main.scss:public/build/css/main.css --style=compressed",
+    "watch-css": "sass assets/scss/main.scss:public/build/css/main.css --watch",
+    "dev": "npm run watch-css",
+    "build": "npm run build-css"
+  },
+  "devDependencies": {
+    "sass": "^1.69.5"
+  }
+}

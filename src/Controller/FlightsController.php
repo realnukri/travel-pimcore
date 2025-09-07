@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use Pimcore\Controller\FrontendController;
-use Pimcore\Model\DataObject\Flights;
+use Pimcore\Model\DataObject\Flight;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -16,14 +16,14 @@ class FlightsController extends FrontendController
     public function indexAction(Request $request): Response
     {
         // Fetch all published flight objects from Pimcore
-        $flightListing = new Flights\Listing();
+        $flightListing = new Flight\Listing();
         $flightListing->setCondition('published = 1');
         $flightListing->setOrderKey('price');
         $flightListing->setOrder('ASC');
         $flightListing->setLimit(6);
-        
+
         $flights = $flightListing->load();
-        
+
         // Popular destinations - could be fetched from DataObjects or hardcoded
         $popularDestinations = [
             [
@@ -81,7 +81,7 @@ class FlightsController extends FrontendController
                 'airline' => 'Czech Airlines'
             ]
         ];
-        
+
         // If flights DataObjects exist, use them instead
         if (!empty($flights)) {
             $popularDestinations = [];
@@ -97,7 +97,7 @@ class FlightsController extends FrontendController
                 ];
             }
         }
-        
+
         // Features
         $features = [
             [
@@ -121,14 +121,14 @@ class FlightsController extends FrontendController
                 'description' => 'Kostenlose Stornierung bis zu 24h vor Abflug'
             ]
         ];
-        
+
         return $this->render('flights/index.html.twig', [
             'popularDestinations' => $popularDestinations,
             'features' => $features,
             'flights' => $flights
         ]);
     }
-    
+
     /**
      * @Route("/flights/search", name="flights_search")
      */
@@ -139,29 +139,29 @@ class FlightsController extends FrontendController
         $departureDate = $request->get('departure_date');
         $returnDate = $request->get('return_date');
         $passengers = $request->get('passengers', 1);
-        
+
         $flightListing = new Flights\Listing();
-        
+
         $conditions = ['published = 1'];
-        
+
         if ($departure) {
             $conditions[] = "departureCity LIKE :departure";
             $flightListing->setConditionParam('departure', '%' . $departure . '%');
         }
-        
+
         if ($arrival) {
             $conditions[] = "arrivalCity LIKE :arrival";
             $flightListing->setConditionParam('arrival', '%' . $arrival . '%');
         }
-        
+
         if ($departureDate) {
             $conditions[] = "departureDate >= :departureDate";
             $flightListing->setConditionParam('departureDate', $departureDate);
         }
-        
+
         $flightListing->setCondition(implode(' AND ', $conditions));
         $searchResults = $flightListing->load();
-        
+
         return $this->render('flights/search.html.twig', [
             'searchResults' => $searchResults,
             'searchParams' => [
@@ -173,7 +173,7 @@ class FlightsController extends FrontendController
             ]
         ]);
     }
-    
+
     private function getCountryFlag($country): string
     {
         $flags = [
@@ -190,7 +190,7 @@ class FlightsController extends FrontendController
             'Japan' => '🇯🇵',
             'China' => '🇨🇳'
         ];
-        
+
         return $flags[$country] ?? '🏳️';
     }
 }

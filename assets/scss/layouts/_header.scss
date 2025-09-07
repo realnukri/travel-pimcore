@@ -1,0 +1,42 @@
+// Header/Navigation Styles
+@import '../abstracts/variables';
+@import '../abstracts/mixins';
+
+header {
+    background: $bg-white;
+    box-shadow: $shadow-sm;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+nav {
+    padding: $spacing-md 0;
+    
+    ul {
+        display: flex;
+        gap: $spacing-xl;
+        align-items: center;
+        
+        @include responsive('md') {
+            flex-direction: column;
+            gap: $spacing-md;
+        }
+    }
+    
+    a {
+        color: $text-primary;
+        font-weight: 500;
+        transition: $transition-fast;
+        
+        &:hover {
+            color: $primary-color;
+        }
+        
+        &.active {
+            color: $primary-color;
+            border-bottom: 2px solid $primary-color;
+            padding-bottom: 2px;
+        }
+    }
+}

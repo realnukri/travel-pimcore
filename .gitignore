@@ -7,6 +7,9 @@
 /phpunit.xml
 /public/bundles/
 /public/var/*
+/cache
+/var/cache
+/node_modules
 
 # local config
 /.env.local

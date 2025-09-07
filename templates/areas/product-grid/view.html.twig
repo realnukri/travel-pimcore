@@ -1,0 +1,86 @@
+<section class="destination-grid-section">
+    <div class="container">
+        {% if editmode %}
+            <div class="edit-info">
+                <h5>Destination Grid</h5>
+                <p>Bitte wählen Sie die gewünschten Reiseziele aus:</p>
+            </div>
+            {{ pimcore_relations("destinations", {
+                "types": ["object"],
+                "classes": ["Destionation"],
+                "width": "100%"
+            }) }}
+        {% else %}
+            {% set destinations = pimcore_relations("destinations").data %}
+            
+            {% if destinations|length %}
+                <div class="destinations-grid">
+                    {% for destination in destinations %}
+                        {% if destination.published %}
+                            <div class="destination-card">
+                                {% if destination.image %}
+                                    <div class="destination-image">
+                                        <img src="{{ destination.image.getThumbnail('card') }}" 
+                                             alt="{{ destination.name }}">
+                                        {% if destination.tag %}
+                                            <span class="destination-tag">{{ destination.tag }}</span>
+                                        {% endif %}
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="destination-content">
+                                    <h3 class="destination-title">{{ destination.name }}</h3>
+                                    <p class="destination-country">📍 {{ destination.country }}</p>
+                                    
+                                    {% if destination.rating %}
+                                        <div class="destination-rating">
+                                            <span class="stars">
+                                                {% set fullStars = destination.rating|round(0, 'floor') %}
+                                                {% set hasHalfStar = (destination.rating - fullStars) >= 0.5 %}
+                                                {% for i in 1..fullStars %}★{% endfor %}{% if hasHalfStar %}☆{% endif %}
+                                            </span>
+                                            <span class="rating-text">
+                                                {{ destination.rating }}
+                                                {% if destination.reviews %}
+                                                    ({{ destination.reviews }} Bewertungen)
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                    {% endif %}
+                                    
+                                    <p class="destination-description">
+                                        {{ destination.description|striptags|slice(0, 150) }}...
+                                    </p>
+                                    
+                                    {% if destination.highlights and destination.highlights|length > 0 %}
+                                        <div class="destination-highlights">
+                                            <small>Highlights:</small>
+                                            <div class="highlights-list">
+                                                {% for highlight in destination.highlights|slice(0, 3) %}
+                                                    <span class="highlight-badge">{{ highlight }}</span>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="destination-footer">
+                                    {% if destination.price %}
+                                        <span class="destination-price">{{ destination.price }}</span>
+                                    {% endif %}
+                                    <a href="{{ path('destination_detail', {'key': destination.key}) }}" class="destination-link">
+                                        Mehr erfahren →
+                                    </a>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="no-destinations">
+                    <p>Keine Reiseziele ausgewählt. Bitte wählen Sie im Edit-Modus Reiseziele aus.</p>
+                </div>
+            {% endif %}
+        {% endif %}
+    </div>
+</section>

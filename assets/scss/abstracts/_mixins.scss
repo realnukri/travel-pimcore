@@ -1,0 +1,56 @@
+// Responsive Mixins
+@mixin responsive($breakpoint) {
+    @if $breakpoint == 'sm' {
+        @media (max-width: $breakpoint-sm) {
+            @content;
+        }
+    } @else if $breakpoint == 'md' {
+        @media (max-width: $breakpoint-md) {
+            @content;
+        }
+    } @else if $breakpoint == 'lg' {
+        @media (max-width: $breakpoint-lg) {
+            @content;
+        }
+    } @else if $breakpoint == 'xl' {
+        @media (max-width: $breakpoint-xl) {
+            @content;
+        }
+    }
+}
+
+// Flexbox Center
+@mixin flex-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+// Card Shadow
+@mixin card-shadow($type: 'default') {
+    @if $type == 'hover' {
+        box-shadow: $shadow-hover;
+    } @else {
+        box-shadow: $shadow-md;
+    }
+}
+
+// Button Style
+@mixin button-style($bg-color: $primary-color, $hover-color: $primary-dark) {
+    background: $bg-color;
+    color: white;
+    padding: $spacing-sm $spacing-lg;
+    border-radius: $radius-sm;
+    text-decoration: none;
+    transition: $transition-base;
+    display: inline-block;
+    cursor: pointer;
+    font-weight: 500;
+    border: none;
+    
+    &:hover {
+        background: $hover-color;
+        color: white;
+        text-decoration: none;
+    }
+}

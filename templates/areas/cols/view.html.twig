@@ -1,0 +1,160 @@
+{# Cols Areabrick Template #}
+{% set containerSize = pimcore_select("container-size") %}
+{% set numCols = pimcore_numeric('cols') %}
+{% set colGap = pimcore_select("gap") %}
+{% set verticalAlign = pimcore_select("vertical-align") %}
+
+<section class="cols-section">
+    <div class="{{ containerSize.getData() ?: 'container' }}">
+        {% if editmode %}
+            <div class="cols-settings">
+                <div class="cols-settings-header">
+                    <h5>Spalten-Einstellungen</h5>
+                </div>
+                
+                <div class="cols-settings-grid">
+                    <div class="setting-group">
+                        <label>Anzahl Spalten:</label>
+                        {{ pimcore_numeric('cols', {
+                            'defaultValue': 2,
+                            'minValue': 1,
+                            'maxValue': 6
+                        }) }}
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>Container-Breite:</label>
+                        {{ pimcore_select("container-size", {
+                            "store": [
+                                ["container", "Standard (1280px)"],
+                                ["container-wide", "Breit (1440px)"],
+                                ["container-narrow", "Schmal (960px)"],
+                                ["container-fluid", "Volle Breite"]
+                            ],
+                            "defaultValue": "container"
+                        }) }}
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>Spaltenabstand:</label>
+                        {{ pimcore_select("gap", {
+                            "store": [
+                                ["gap-0", "Kein Abstand"],
+                                ["gap-sm", "Klein (0.5rem)"],
+                                ["gap-md", "Mittel (1rem)"],
+                                ["gap-lg", "Groß (1.5rem)"],
+                                ["gap-xl", "Extra Groß (2rem)"]
+                            ],
+                            "defaultValue": "gap-md"
+                        }) }}
+                    </div>
+                    
+                    <div class="setting-group">
+                        <label>Vertikale Ausrichtung:</label>
+                        {{ pimcore_select("vertical-align", {
+                            "store": [
+                                ["align-start", "Oben"],
+                                ["align-center", "Mitte"],
+                                ["align-end", "Unten"],
+                                ["align-stretch", "Gestreckt"]
+                            ],
+                            "defaultValue": "align-stretch"
+                        }) }}
+                    </div>
+                </div>
+                
+                <div class="cols-settings-info">
+                    <p><strong>Responsive Einstellungen:</strong></p>
+                    <p>Für jede Spalte können Sie individuelle Breiten für verschiedene Bildschirmgrößen festlegen:</p>
+                    <ul>
+                        <li><strong>Mobile:</strong> < 768px</li>
+                        <li><strong>Tablet:</strong> 768px - 1024px</li>
+                        <li><strong>Desktop:</strong> > 1024px</li>
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+        
+        <div class="cols-grid {{ colGap.getData() ?: 'gap-md' }} {{ verticalAlign.getData() ?: 'align-stretch' }}" 
+             data-cols="{{ numCols.getData() ?: 2 }}">
+            {% for i in 1..(numCols.getData() ?: 2) %}
+                {% set colWidthMobile = pimcore_select('col-' ~ i ~ '-mobile') %}
+                {% set colWidthTablet = pimcore_select('col-' ~ i ~ '-tablet') %}
+                {% set colWidthDesktop = pimcore_select('col-' ~ i ~ '-desktop') %}
+                
+                <div class="col-item 
+                    {{ colWidthMobile.getData() ?: 'col-mobile-12' }}
+                    {{ colWidthTablet.getData() ?: 'col-tablet-6' }}
+                    {{ colWidthDesktop.getData() ?: 'col-desktop-auto' }}">
+                    
+                    {% if editmode %}
+                        <div class="col-settings">
+                            <h6>Spalte {{ i }}</h6>
+                            <div class="col-settings-row">
+                                <label>Mobile:</label>
+                                {{ pimcore_select('col-' ~ i ~ '-mobile', {
+                                    "store": [
+                                        ["col-mobile-12", "100% (12/12)"],
+                                        ["col-mobile-9", "75% (9/12)"],
+                                        ["col-mobile-6", "50% (6/12)"],
+                                        ["col-mobile-4", "33% (4/12)"],
+                                        ["col-mobile-3", "25% (3/12)"],
+                                        ["col-mobile-hide", "Verstecken"]
+                                    ],
+                                    "defaultValue": "col-mobile-12"
+                                }) }}
+                            </div>
+                            <div class="col-settings-row">
+                                <label>Tablet:</label>
+                                {{ pimcore_select('col-' ~ i ~ '-tablet', {
+                                    "store": [
+                                        ["col-tablet-12", "100% (12/12)"],
+                                        ["col-tablet-9", "75% (9/12)"],
+                                        ["col-tablet-6", "50% (6/12)"],
+                                        ["col-tablet-4", "33% (4/12)"],
+                                        ["col-tablet-3", "25% (3/12)"],
+                                        ["col-tablet-auto", "Automatisch"],
+                                        ["col-tablet-hide", "Verstecken"]
+                                    ],
+                                    "defaultValue": "col-tablet-6"
+                                }) }}
+                            </div>
+                            <div class="col-settings-row">
+                                <label>Desktop:</label>
+                                {{ pimcore_select('col-' ~ i ~ '-desktop', {
+                                    "store": [
+                                        ["col-desktop-12", "100% (12/12)"],
+                                        ["col-desktop-9", "75% (9/12)"],
+                                        ["col-desktop-6", "50% (6/12)"],
+                                        ["col-desktop-4", "33% (4/12)"],
+                                        ["col-desktop-3", "25% (3/12)"],
+                                        ["col-desktop-2", "16.66% (2/12)"],
+                                        ["col-desktop-auto", "Automatisch"],
+                                        ["col-desktop-hide", "Verstecken"]
+                                    ],
+                                    "defaultValue": "col-desktop-auto"
+                                }) }}
+                            </div>
+                        </div>
+                    {% endif %}
+                    
+                    <div class="col-content">
+                        {{ pimcore_areablock('column-' ~ i ~ '-content', {
+                            "allowed": [
+                                "wysiwyg-text",
+                                "image",
+                                "product-grid",
+                                "cols"
+                            ],
+                            "group": {
+                                "Inhalt": ["wysiwyg-text", "image"],
+                                "Layout": ["cols"],
+                                "Komponenten": ["product-grid"]
+                            }
+                        }) }}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>

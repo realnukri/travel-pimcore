@@ -1,0 +1,238 @@
+{% extends 'layouts/layout.html.twig' %}
+
+{% block title %}{{ destination.name }} - {{ destination.country }} | TravelExplorer{% endblock %}
+
+{% block content %}
+    <div class="destination-detail">
+        {# Hero Section with Image Carousel #}
+        <section class="destination-hero">
+            <div class="hero-carousel">
+                {% if images|length > 0 %}
+                    <div class="carousel-container">
+                        <div class="carousel-track">
+                            {% for image in images %}
+                                <div class="carousel-slide {% if loop.first %}active{% endif %}" data-slide="{{ loop.index0 }}">
+                                    <img src="{{ image.getThumbnail('preview') }}" alt="{{ destination.name }} - Bild {{ loop.index }}">
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {% if images|length > 1 %}
+                            <button class="carousel-btn carousel-prev" onclick="changeSlide(-1)">‹</button>
+                            <button class="carousel-btn carousel-next" onclick="changeSlide(1)">›</button>
+                            <div class="carousel-dots">
+                                {% for image in images %}
+                                    <span class="dot {% if loop.first %}active{% endif %}" onclick="currentSlide({{ loop.index0 }})"></span>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+                
+                <div class="hero-overlay"></div>
+                
+                <div class="hero-content">
+                    <a href="{{ path('destination_list') }}" class="back-link">
+                        ← Zurück zu allen Destinationen
+                    </a>
+                    
+                    <div class="hero-info">
+                        <div class="container">
+                            {% if destination.tag %}
+                                <span class="destination-badge">{{ destination.tag }}</span>
+                            {% endif %}
+                            <h1 class="hero-title">{{ destination.name }}</h1>
+                            <div class="hero-location">
+                                <span>📍 {{ destination.country }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {# Main Content #}
+        <section class="destination-content">
+            <div class="container">
+                <div class="content-grid">
+                    {# Main Column #}
+                    <div class="main-column">
+                        {# About Section #}
+                        <div class="detail-card">
+                            <h2>Über das Reiseziel</h2>
+                            <p class="description">{{ destination.description }}</p>
+                            
+                            {% if destination.longDescription %}
+                                <div class="long-description">
+                                    {{ destination.longDescription|raw }}
+                                </div>
+                            {% endif %}
+                            
+                            {% if destination.rating %}
+                                <div class="rating-info">
+                                    <div class="rating-stars">
+                                        {% set fullStars = destination.rating|round(0, 'floor') %}
+                                        {% set hasHalfStar = (destination.rating - fullStars) >= 0.5 %}
+                                        {% for i in 1..fullStars %}★{% endfor %}{% if hasHalfStar %}☆{% endif %}
+                                        <span class="rating-number">{{ destination.rating }}</span>
+                                        {% if destination.reviews %}
+                                            <span class="review-count">({{ destination.reviews }} Bewertungen)</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        {# Highlights Section #}
+                        {% if destination.highlights and destination.highlights|length > 0 %}
+                            <div class="detail-card">
+                                <h2>Highlights</h2>
+                                <div class="highlights-grid">
+                                    {% for highlight in destination.highlights %}
+                                        <div class="highlight-item">
+                                            <span class="highlight-icon">📸</span>
+                                            <span class="highlight-text">{{ highlight }}</span>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {# Activities Section #}
+                        {% if activities|length > 0 %}
+                            <div class="detail-card">
+                                <h2>Was Sie erleben können</h2>
+                                <div class="activities-list">
+                                    {% for activity in activities %}
+                                        <div class="activity-item">
+                                            <h3>{{ activity.title }}</h3>
+                                            <p>{{ activity.description }}</p>
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endif %}
+
+                        {# Travel Info Section #}
+                        <div class="detail-card">
+                            <h2>Reiseinformationen</h2>
+                            <div class="info-grid">
+                                <div class="info-item">
+                                    <span class="info-icon">☀️</span>
+                                    <div class="info-content">
+                                        <strong>Beste Reisezeit</strong>
+                                        <span>{{ bestTime }}</span>
+                                    </div>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-icon">🏔️</span>
+                                    <div class="info-content">
+                                        <strong>Klima</strong>
+                                        <span>{{ climate }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Sidebar #}
+                    <aside class="sidebar">
+                        <div class="booking-card">
+                            <h3>Planen Sie Ihre Reise</h3>
+                            
+                            <div class="price-box">
+                                <span class="price-label">Preis ab</span>
+                                <div class="price-amount">{{ destination.price ?: 'auf Anfrage' }}</div>
+                                <span class="price-info">pro Person</span>
+                            </div>
+                            
+                            {% if destination.rating %}
+                                <div class="rating-box">
+                                    <span class="rating-label">Bewertungen</span>
+                                    <div class="rating-display">
+                                        <span class="stars">★</span>
+                                        <span class="rating-value">{{ destination.rating }}</span>
+                                        {% if destination.reviews %}
+                                            <span class="review-text">({{ destination.reviews }} Bewertungen)</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                            
+                            <div class="action-buttons">
+                                <button class="btn btn-primary">Flüge finden</button>
+                                <button class="btn btn-outline">Hotels vergleichen</button>
+                                <button class="btn btn-ghost">Reiseführer herunterladen</button>
+                            </div>
+                        </div>
+                    </aside>
+                </div>
+
+                {# Related Destinations #}
+                {% if relatedDestinations|length > 0 %}
+                    <div class="related-section">
+                        <h2>Weitere interessante Reiseziele</h2>
+                        <div class="related-grid">
+                            {% for related in relatedDestinations %}
+                                <a href="{{ path('destination_detail', {'key': related.key}) }}" class="related-card">
+                                    {% if related.image %}
+                                        <div class="related-image">
+                                            <img src="{{ related.image.getThumbnail('card') }}" alt="{{ related.name }}">
+                                        </div>
+                                    {% endif %}
+                                    <div class="related-content">
+                                        <h4>{{ related.name }}</h4>
+                                        <p>{{ related.country }}</p>
+                                        {% if related.price %}
+                                            <span class="related-price">{{ related.price }}</span>
+                                        {% endif %}
+                                    </div>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const slides = document.querySelectorAll('.carousel-slide');
+        const dots = document.querySelectorAll('.dot');
+
+        function showSlide(index) {
+            if (slides.length === 0) return;
+            
+            // Wrap around
+            if (index >= slides.length) currentSlideIndex = 0;
+            if (index < 0) currentSlideIndex = slides.length - 1;
+            
+            // Hide all slides
+            slides.forEach(slide => slide.classList.remove('active'));
+            dots.forEach(dot => dot.classList.remove('active'));
+            
+            // Show current slide
+            slides[currentSlideIndex].classList.add('active');
+            if (dots[currentSlideIndex]) {
+                dots[currentSlideIndex].classList.add('active');
+            }
+        }
+
+        function changeSlide(direction) {
+            currentSlideIndex += direction;
+            showSlide(currentSlideIndex);
+        }
+
+        function currentSlide(index) {
+            currentSlideIndex = index;
+            showSlide(currentSlideIndex);
+        }
+
+        // Auto-advance carousel
+        setInterval(() => {
+            if (slides.length > 1) {
+                changeSlide(1);
+            }
+        }, 5000);
+    </script>
+{% endblock %}

@@ -1,0 +1,21 @@
+// Main SCSS File - Import all components and styles
+
+// 1. Abstracts - Variables, Mixins, Functions
+@import 'abstracts/variables';
+@import 'abstracts/mixins';
+
+// 2. Base styles
+@import 'base/reset';
+@import 'base/typography';
+
+// 3. Layout components
+@import 'layouts/container';
+@import 'layouts/header';
+@import 'layouts/footer';
+
+// 4. Components
+@import 'components/destination-grid';
+@import 'components/cols-grid';
+
+// 5. Pages
+@import 'pages/destination-detail';
