@@ -19,15 +19,21 @@
                             {% if destination.published %}
                                 <div class="destination-card">
                                     <a href="{{ path('destination_detail', {'key': destination.key}) }}" class="card-link">
-                                        {% if destination.image %}
-                                            <div class="destination-image">
-                                                <img src="{{ destination.image.getThumbnail('card') }}" 
+                                        <div class="destination-image">
+                                            {% if destination.image %}
+                                                <img src="{{ destination.image.getPath() ~ destination.image.getFilename() }}" 
                                                      alt="{{ destination.name }}">
-                                                {% if destination.tag %}
-                                                    <span class="destination-tag">{{ destination.tag }}</span>
-                                                {% endif %}
-                                            </div>
-                                        {% endif %}
+                                            {% else %}
+                                                <div style="width: 100%; height: 250px; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                                    <svg width="60" height="60" fill="none" stroke="white" stroke-width="2" viewBox="0 0 24 24">
+                                                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                                    </svg>
+                                                </div>
+                                            {% endif %}
+                                            {% if destination.tag %}
+                                                <span class="destination-tag">{{ destination.tag }}</span>
+                                            {% endif %}
+                                        </div>
                                         
                                         <div class="destination-content">
                                             <h3 class="destination-title">{{ destination.name }}</h3>

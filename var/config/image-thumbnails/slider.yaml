@@ -1,0 +1,29 @@
+pimcore:
+    assets:
+        image:
+            thumbnails:
+                definitions:
+                    slider:
+                        name: slider
+                        description: 'Slider images'
+                        group: 'Areabricks'
+                        format: 'AUTO'
+                        quality: 85
+                        high_resolution: 2
+                        preserve_color: false
+                        preserve_metadata: false
+                        auto_format:
+                            avif:
+                                enabled: true
+                                quality: 65
+                            webp:
+                                enabled: true
+                                quality: 85
+                        items:
+                            -
+                                method: cover
+                                arguments:
+                                    width: 1200
+                                    height: 500
+                                    positioning: center
+                                    forceResize: false

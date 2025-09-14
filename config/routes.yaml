@@ -4,3 +4,24 @@ _pimcore:
 app:
     resource: "../src/Controller/"
     type: annotation
+
+# Hotels routes
+hotels_default:
+    path: /hotels
+    defaults:
+        _controller: App\Controller\ContentController::hotelsAction
+
+hotels_list:
+    path: /hotels/
+    defaults:
+        _controller: App\Controller\ContentController::hotelsAction
+
+hotels_detail:
+    path: /hotels/detail
+    defaults:
+        _controller: App\Controller\HotelsController::detailAction
+
+hotels_filter:
+    path: /hotels/filter
+    defaults:
+        _controller: App\Controller\HotelsController::filterAction

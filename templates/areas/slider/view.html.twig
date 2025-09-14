@@ -1,0 +1,208 @@
+{# Slider Areabrick Template #}
+
+{% set sliderImages = pimcore_block('sliderImages') %}
+
+<div class="slider-container" data-slider-id="slider-{{ random() }}">
+    <div class="slider-wrapper">
+        <div class="slider-track">
+            {% for i in sliderImages.iterator %}
+                <div class="slide {% if loop.first %}active{% endif %}" data-slide="{{ loop.index0 }}">
+                    {{ pimcore_image('slideImage', {
+                        'thumbnail': 'slider',
+                        'title': 'Slide Bild',
+                        'reload': true,
+                        'imgAttributes': {
+                            'class': 'slide-image',
+                            'loading': 'lazy'
+                        }
+                    })|raw }}
+                    
+                    {% set caption = pimcore_input('slideCaption', {
+                        'placeholder': 'Bildbeschreibung (optional)',
+                        'width': '100%'
+                    }) %}
+                    
+                    {% if caption.getValue() %}
+                        <div class="slide-caption">
+                            {{ caption|raw }}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            
+            {% if sliderImages.getCount() == 0 %}
+                <div class="slide active">
+                    <div class="slide-placeholder">
+                        <div class="placeholder-content">
+                            <svg width="100" height="100" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect>
+                                <circle cx="8.5" cy="8.5" r="1.5"></circle>
+                                <polyline points="21 15 16 10 5 21"></polyline>
+                            </svg>
+                            <p>Klicken Sie auf "+" um Bilder hinzuzufügen</p>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        
+        {% if sliderImages.getCount() > 1 %}
+            <button class="slider-btn slider-prev" aria-label="Vorheriges Bild">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+            </button>
+            <button class="slider-btn slider-next" aria-label="Nächstes Bild">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                </svg>
+            </button>
+            
+            <div class="slider-dots">
+                {% for i in sliderImages.iterator %}
+                    <button class="dot {% if loop.first %}active{% endif %}" 
+                            data-slide="{{ loop.index0 }}"
+                            aria-label="Gehe zu Bild {{ loop.index }}">
+                    </button>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+    (function() {
+        const container = document.querySelector('[data-slider-id="slider-{{ random() }}"]');
+        if (!container) return;
+        
+        const slides = container.querySelectorAll('.slide');
+        const dots = container.querySelectorAll('.dot');
+        const prevBtn = container.querySelector('.slider-prev');
+        const nextBtn = container.querySelector('.slider-next');
+        
+        if (slides.length <= 1) return; // No need for slider functionality with 0 or 1 slide
+        
+        let currentIndex = 0;
+        let autoplayInterval = null;
+        
+        function showSlide(index) {
+            if (slides.length === 0) return;
+            
+            // Wrap around
+            if (index >= slides.length) currentIndex = 0;
+            if (index < 0) currentIndex = slides.length - 1;
+            
+            // Update slides
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[currentIndex].classList.add('active');
+            
+            // Update dots
+            if (dots.length > 0) {
+                dots.forEach(dot => dot.classList.remove('active'));
+                if (dots[currentIndex]) {
+                    dots[currentIndex].classList.add('active');
+                }
+            }
+        }
+        
+        function nextSlide() {
+            currentIndex++;
+            showSlide(currentIndex);
+        }
+        
+        function prevSlide() {
+            currentIndex--;
+            showSlide(currentIndex);
+        }
+        
+        function goToSlide(index) {
+            currentIndex = index;
+            showSlide(currentIndex);
+            // Reset autoplay when user interacts
+            if (autoplayInterval) {
+                stopAutoplay();
+                startAutoplay();
+            }
+        }
+        
+        function startAutoplay() {
+            if (slides.length > 1) {
+                autoplayInterval = setInterval(nextSlide, 5000);
+            }
+        }
+        
+        function stopAutoplay() {
+            if (autoplayInterval) {
+                clearInterval(autoplayInterval);
+                autoplayInterval = null;
+            }
+        }
+        
+        // Event listeners
+        if (prevBtn) {
+            prevBtn.addEventListener('click', () => {
+                prevSlide();
+                stopAutoplay();
+                startAutoplay();
+            });
+        }
+        
+        if (nextBtn) {
+            nextBtn.addEventListener('click', () => {
+                nextSlide();
+                stopAutoplay();
+                startAutoplay();
+            });
+        }
+        
+        // Dot navigation
+        dots.forEach((dot, index) => {
+            dot.addEventListener('click', () => goToSlide(index));
+        });
+        
+        // Keyboard navigation
+        container.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') prevSlide();
+            if (e.key === 'ArrowRight') nextSlide();
+        });
+        
+        // Touch/swipe support
+        let touchStartX = 0;
+        let touchEndX = 0;
+        
+        container.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].screenX;
+        });
+        
+        container.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].screenX;
+            handleSwipe();
+        });
+        
+        function handleSwipe() {
+            const swipeThreshold = 50;
+            const diff = touchStartX - touchEndX;
+            
+            if (Math.abs(diff) > swipeThreshold) {
+                if (diff > 0) {
+                    nextSlide(); // Swipe left
+                } else {
+                    prevSlide(); // Swipe right
+                }
+                
+                stopAutoplay();
+                startAutoplay();
+            }
+        }
+        
+        // Pause on hover
+        container.addEventListener('mouseenter', stopAutoplay);
+        container.addEventListener('mouseleave', startAutoplay);
+        
+        // Start autoplay
+        startAutoplay();
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', stopAutoplay);
+    })();
+</script>

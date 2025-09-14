@@ -1,0 +1,271 @@
+{% extends 'layouts/layout.html.twig' %}
+
+{% block title %}{{ hotel.getName() }} - TravelExplorer{% endblock %}
+
+{% block content %}
+    <div class="hotel-detail-page">
+        {# Hero Section with Hotel Image #}
+        <section class="hotel-hero" {% if hotel.getImage() %}style="background-image: url('{{ hotel.getImage().getThumbnail('hotel-hero') }}');"{% endif %}>
+            <div class="hero-overlay">
+                <div class="container">
+                    <nav aria-label="breadcrumb">
+                        <ol class="breadcrumb">
+                            <li class="breadcrumb-item"><a href="/" class="text-white">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{ path('hotels_default') }}" class="text-white">Hotels</a></li>
+                            <li class="breadcrumb-item active text-white" aria-current="page">{{ hotel.getName() }}</li>
+                        </ol>
+                    </nav>
+
+                    <h1 class="display-4 text-white mb-3">{{ hotel.getName() }}</h1>
+                    <p class="lead text-white mb-3">
+                        <i class="bi bi-geo-alt-fill"></i> {{ hotel.getLocation() }}
+                    </p>
+
+                    <div class="hero-badges">
+                        {% if hotel.getFeatured() %}
+                        <span class="badge bg-warning text-dark me-2">
+                            <i class="bi bi-star-fill"></i> Empfohlen
+                        </span>
+                        {% endif %}
+                        <span class="badge bg-light text-dark">
+                            <i class="bi bi-star-fill text-warning"></i> {{ hotel.getRating()|number_format(1, ',', '.') }}
+                            ({{ hotel.getReviewCount() }} Bewertungen)
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        {# Main Content #}
+        <section class="py-5">
+            <div class="container">
+                <div class="row">
+                    {# Left Column - Hotel Details #}
+                    <div class="col-lg-8">
+                        {# Description #}
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h3 class="card-title mb-3">Über das Hotel</h3>
+                                <p class="card-text">{{ hotel.getDescription() }}</p>
+                            </div>
+                        </div>
+
+                        {# Amenities #}
+                        {% if hotel.getAmenities() %}
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h3 class="card-title mb-3">Ausstattung & Services</h3>
+                                <div class="row">
+                                    {% for amenity in hotel.getAmenities() %}
+                                    <div class="col-md-4 col-sm-6 mb-3">
+                                        <div class="amenity-item">
+                                            <i class="bi bi-check-circle-fill text-success me-2"></i>
+                                            {{ amenity }}
+                                        </div>
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {# Reviews Section #}
+                        <div class="card mb-4">
+                            <div class="card-body">
+                                <h3 class="card-title mb-3">Gästebewertungen</h3>
+
+                                <div class="rating-overview mb-4">
+                                    <div class="row align-items-center">
+                                        <div class="col-md-4 text-center">
+                                            <div class="rating-score">
+                                                <h1 class="display-3 mb-0 text-primary">{{ hotel.getRating()|number_format(1, ',', '.') }}</h1>
+                                                <div class="stars mb-2">
+                                                    {% for i in 1..5 %}
+                                                        {% if i <= hotel.getRating() %}
+                                                        <i class="bi bi-star-fill text-warning"></i>
+                                                        {% elseif i - 0.5 <= hotel.getRating() %}
+                                                        <i class="bi bi-star-half text-warning"></i>
+                                                        {% else %}
+                                                        <i class="bi bi-star text-warning"></i>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                </div>
+                                                <p class="text-muted">Basierend auf {{ hotel.getReviewCount() }} Bewertungen</p>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="rating-bars">
+                                                {% set ratings = {
+                                                    'Ausgezeichnet': 65,
+                                                    'Sehr gut': 25,
+                                                    'Gut': 7,
+                                                    'Befriedigend': 2,
+                                                    'Mangelhaft': 1
+                                                } %}
+                                                {% for label, percentage in ratings %}
+                                                <div class="rating-bar-item mb-2">
+                                                    <div class="d-flex align-items-center">
+                                                        <span class="me-3" style="width: 100px;">{{ label }}</span>
+                                                        <div class="progress flex-grow-1" style="height: 8px;">
+                                                            <div class="progress-bar bg-primary" style="width: {{ percentage }}%"></div>
+                                                        </div>
+                                                        <span class="ms-3" style="width: 40px;">{{ percentage }}%</span>
+                                                    </div>
+                                                </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Right Column - Booking Card #}
+                    <div class="col-lg-4">
+                        <div class="booking-card card shadow-lg sticky-top" style="top: 100px;">
+                            <div class="card-body">
+                                <h4 class="card-title mb-4">Jetzt buchen</h4>
+
+                                <div class="price-display mb-4">
+                                    <span class="display-6 text-primary">€{{ hotel.getPrice()|number_format(0, ',', '.') }}</span>
+                                    <span class="text-muted">/ Nacht</span>
+                                </div>
+
+                                {% if hotel.getOriginalPrice() and hotel.getOriginalPrice() > hotel.getPrice() %}
+                                <div class="discount-badge mb-3">
+                                    <span class="badge bg-danger">
+                                        -{{ ((1 - hotel.getPrice() / hotel.getOriginalPrice()) * 100)|round }}% Rabatt
+                                    </span>
+                                    <span class="text-decoration-line-through text-muted ms-2">
+                                        €{{ hotel.getOriginalPrice()|number_format(0, ',', '.') }}
+                                    </span>
+                                </div>
+                                {% endif %}
+
+                                <form class="booking-form">
+                                    <div class="mb-3">
+                                        <label class="form-label">Check-in</label>
+                                        <input type="date" class="form-control" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Check-out</label>
+                                        <input type="date" class="form-control" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Gäste</label>
+                                        <select class="form-control">
+                                            <option>1 Gast</option>
+                                            <option>2 Gäste</option>
+                                            <option>3 Gäste</option>
+                                            <option>4 Gäste</option>
+                                        </select>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary btn-lg w-100 mb-3">
+                                        Verfügbarkeit prüfen
+                                    </button>
+                                </form>
+
+                                <div class="hotel-features text-center text-muted">
+                                    <small>
+                                        <i class="bi bi-check-circle text-success"></i> Kostenlose Stornierung<br>
+                                        <i class="bi bi-check-circle text-success"></i> Bestpreisgarantie<br>
+                                        <i class="bi bi-check-circle text-success"></i> Sofortige Bestätigung
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {# Similar Hotels #}
+                {% if similarHotels|length > 0 %}
+                <div class="similar-hotels mt-5">
+                    <h3 class="mb-4">Ähnliche Hotels in {{ hotel.getLocation() }}</h3>
+                    <div class="row">
+                        {% for similarHotel in similarHotels %}
+                        <div class="col-md-6 col-lg-3 mb-4">
+                            <div class="card h-100">
+                                {% if similarHotel.getImage() %}
+                                <img src="{{ similarHotel.getImage().getThumbnail('hotel-card-small') }}" class="card-img-top" alt="{{ similarHotel.getName() }}">
+                                {% else %}
+                                <div class="placeholder-image" style="height: 150px; background: #f0f0f0;"></div>
+                                {% endif %}
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ similarHotel.getName() }}</h6>
+                                    <p class="text-muted small">
+                                        <i class="bi bi-star-fill text-warning"></i> {{ similarHotel.getRating()|number_format(1, ',', '.') }}
+                                    </p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <strong>€{{ similarHotel.getPrice() }}</strong>
+                                        <a href="{{ path('hotels_detail', {id: similarHotel.getId()}) }}" class="btn btn-sm btn-outline-primary">Ansehen</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .hotel-hero {
+        min-height: 400px;
+        background-size: cover;
+        background-position: center;
+        position: relative;
+        margin-top: -76px;
+        padding-top: 76px;
+    }
+
+    .hero-overlay {
+        background: linear-gradient(to bottom, rgba(0,0,0,0.5), rgba(0,0,0,0.7));
+        padding: 100px 0 50px;
+        min-height: 400px;
+        display: flex;
+        align-items: flex-end;
+    }
+
+    .breadcrumb {
+        background: none;
+        padding: 0;
+        margin-bottom: 20px;
+    }
+
+    .breadcrumb a {
+        text-decoration: none;
+    }
+
+    .booking-card {
+        border: none;
+        border-radius: 10px;
+    }
+
+    .amenity-item {
+        display: flex;
+        align-items: center;
+        padding: 8px;
+        background: #f8f9fa;
+        border-radius: 5px;
+    }
+
+    .rating-score {
+        padding: 20px;
+    }
+
+    .stars i {
+        font-size: 1.2rem;
+    }
+
+    .placeholder-image {
+        background: linear-gradient(45deg, #f0f0f0 25%, #e0e0e0 25%, #e0e0e0 50%, #f0f0f0 50%, #f0f0f0 75%, #e0e0e0 75%, #e0e0e0);
+        background-size: 20px 20px;
+    }
+</style>
+{% endblock %}

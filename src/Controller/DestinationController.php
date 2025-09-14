@@ -85,31 +85,30 @@ class DestinationController extends FrontendController
             }
         }
         
-        // Prepare image gallery (use main image multiple times if no gallery)
+        // Prepare image gallery 
         $images = [];
-        if ($destination->getImage()) {
-            // Add main image 3 times for carousel effect (in real app, you'd have multiple images)
-            $images[] = $destination->getImage();
-            $images[] = $destination->getImage();
-            $images[] = $destination->getImage();
-        }
         
-        // Get additional images if available (from images gallery field if exists)
+        // Get images from the image gallery field
         if (method_exists($destination, 'getImages') && $destination->getImages()) {
             $imageGallery = $destination->getImages();
-            if (is_array($imageGallery) || $imageGallery instanceof \Traversable) {
-                $images = []; // Reset and use gallery images
-                foreach ($imageGallery as $img) {
-                    if ($img && $img->getImage()) {
-                        $images[] = $img->getImage();
+            if ($imageGallery && method_exists($imageGallery, 'getItems')) {
+                foreach ($imageGallery->getItems() as $item) {
+                    if ($item && method_exists($item, 'getImage') && $item->getImage()) {
+                        $img = $item->getImage();
+                        $images[] = $img->getPath() . $img->getFilename();
                     }
                 }
             }
         }
         
-        // If still no images, try to get at least the main image
+        // If no gallery images, use main image as fallback
         if (empty($images) && $destination->getImage()) {
-            $images[] = $destination->getImage();
+            $image = $destination->getImage();
+            $imagePath = $image->getPath() . $image->getFilename();
+            // Add 3 times for carousel effect
+            $images[] = $imagePath;
+            $images[] = $imagePath;
+            $images[] = $imagePath;
         }
         
         return $this->render('destination/detail.html.twig', [

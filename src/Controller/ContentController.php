@@ -21,6 +21,7 @@ use App\Website\Tool\Text;
 use Pimcore\Bundle\EcommerceFrameworkBundle\Factory;
 use Pimcore\Controller\Attribute\ResponseHeader;
 use Pimcore\Model\DataObject\BodyStyle;
+use Pimcore\Model\DataObject\Hotel;
 use Pimcore\Model\DataObject\Manufacturer;
 use Pimcore\Model\DataObject\Service;
 use Pimcore\Translation\Translator;
@@ -34,6 +35,40 @@ class ContentController
     public function defaultAction(): array
     {
         return [];
+    }
+
+    #[Template('content/hotels.html.twig')]
+    public function hotelsAction(): array
+    {
+        // Get all published hotels
+        $hotelsList = new Hotel\Listing();
+        $hotelsList->setCondition('published = 1');
+        $hotels = $hotelsList->load();
+
+        // If no published hotels, get all for debugging
+        if (empty($hotels)) {
+            $allHotelsList = new Hotel\Listing();
+            $hotels = $allHotelsList->load();
+        }
+
+        // Separate featured hotels
+        $featuredHotels = [];
+        $regularHotels = [];
+
+        foreach ($hotels as $hotel) {
+            if ($hotel && $hotel->getFeatured()) {
+                $featuredHotels[] = $hotel;
+            } else {
+                $regularHotels[] = $hotel;
+            }
+        }
+
+        return [
+            'featuredHotels' => $featuredHotels,
+            'regularHotels' => $regularHotels,
+            'allHotels' => $hotels,
+            'totalCount' => count($hotels)
+        ];
     }
 
 }

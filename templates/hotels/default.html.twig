@@ -1,0 +1,230 @@
+{% extends 'layouts/layout.html.twig' %}
+
+{% block title %}Hotels - TravelExplorer{% endblock %}
+
+{% block content %}
+    <div class="hotels-page">
+        {# Debug Info #}
+        {% if app.environment == 'dev' %}
+        <div class="alert alert-info m-3">
+            <strong>Debug Info:</strong><br>
+            Total Hotels: {{ totalCount|default(0) }}<br>
+            Featured Hotels: {{ featuredHotels|length }}<br>
+            Regular Hotels: {{ regularHotels|length }}<br>
+        </div>
+        {% endif %}
+
+        {# Hero Section #}
+        <section class="hero-section hotels-hero">
+            <div class="container">
+                <h1 class="display-4 text-white mb-4">Unsere Hotels</h1>
+                <p class="lead text-white">Entdecken Sie unsere handverlesene Auswahl an Hotels weltweit ({{ totalCount|default(0) }} Hotels verfügbar)</p>
+
+                {# Search/Filter Bar #}
+                <div class="hotel-search-bar bg-white rounded shadow p-4 mt-4">
+                    <form action="/hotels/filter" method="get" class="row g-3">
+                        <div class="col-md-3">
+                            <input type="text" name="location" class="form-control" placeholder="Reiseziel">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" name="min_price" class="form-control" placeholder="Min. Preis" min="0">
+                        </div>
+                        <div class="col-md-2">
+                            <input type="number" name="max_price" class="form-control" placeholder="Max. Preis" min="0">
+                        </div>
+                        <div class="col-md-2">
+                            <select name="min_rating" class="form-control">
+                                <option value="">Bewertung</option>
+                                <option value="4.5">4.5+ Sterne</option>
+                                <option value="4">4+ Sterne</option>
+                                <option value="3.5">3.5+ Sterne</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <button type="submit" class="btn btn-primary w-100">Hotels suchen</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        {# Featured Hotels Section #}
+        {% if featuredHotels|length > 0 %}
+        <section class="featured-hotels py-5">
+            <div class="container">
+                <h2 class="mb-4">Empfohlene Hotels</h2>
+                <div class="row">
+                    {% for hotel in featuredHotels %}
+                    <div class="col-md-6 col-lg-4 mb-4">
+                        <div class="hotel-card featured h-100">
+                            <div class="card h-100 shadow-sm">
+                                {% if hotel.getImage() %}
+                                <img src="{{ hotel.getImage().getThumbnail('hotel-card') }}" class="card-img-top" alt="{{ hotel.getName() }}">
+                                {% else %}
+                                <div class="placeholder-image">
+                                    <img src="/build/images/hotel-placeholder.jpg" class="card-img-top" alt="{{ hotel.getName() }}">
+                                </div>
+                                {% endif %}
+
+                                <div class="featured-badge">
+                                    <span class="badge bg-warning text-dark">Empfohlen</span>
+                                </div>
+
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ hotel.getName() }}</h5>
+                                    <p class="text-muted mb-2">
+                                        <i class="bi bi-geo-alt"></i> {{ hotel.getLocation() }}
+                                    </p>
+
+                                    <div class="rating mb-2">
+                                        <span class="badge bg-primary">
+                                            <i class="bi bi-star-fill"></i> {{ hotel.getRating()|number_format(1, ',', '.') }}
+                                        </span>
+                                        <small class="text-muted">({{ hotel.getReviewCount() }} Bewertungen)</small>
+                                    </div>
+
+                                    <p class="card-text">{{ hotel.getDescription()|slice(0, 100) }}...</p>
+
+                                    {% if hotel.getAmenities() %}
+                                    <div class="amenities mb-3">
+                                        {% for amenity in hotel.getAmenities()|slice(0, 4) %}
+                                        <span class="badge bg-light text-dark me-1 mb-1">{{ amenity }}</span>
+                                        {% endfor %}
+                                        {% if hotel.getAmenities()|length > 4 %}
+                                        <span class="badge bg-light text-dark">+{{ hotel.getAmenities()|length - 4 }}</span>
+                                        {% endif %}
+                                    </div>
+                                    {% endif %}
+
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <div>
+                                            <span class="h5 text-primary mb-0">€{{ hotel.getPrice()|number_format(0, ',', '.') }}</span>
+                                            <small class="text-muted">/Nacht</small>
+                                        </div>
+                                        <a href="/hotels/detail?id={{ hotel.getId() }}" class="btn btn-primary btn-sm">Details ansehen</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+        {% endif %}
+
+        {# All Hotels Section #}
+        <section class="all-hotels py-5 bg-light">
+            <div class="container">
+                <h2 class="mb-4">Alle Hotels</h2>
+                <div class="row">
+                    {% for hotel in regularHotels %}
+                    <div class="col-md-6 col-lg-3 mb-4">
+                        <div class="hotel-card h-100">
+                            <div class="card h-100 shadow-sm">
+                                {% if hotel.getImage() %}
+                                <img src="{{ hotel.getImage().getThumbnail('hotel-card-small') }}" class="card-img-top" alt="{{ hotel.getName() }}">
+                                {% else %}
+                                <div class="placeholder-image" style="height: 200px; background: #f0f0f0; display: flex; align-items: center; justify-content: center;">
+                                    <i class="bi bi-building" style="font-size: 3rem; color: #ccc;"></i>
+                                </div>
+                                {% endif %}
+
+                                <div class="card-body">
+                                    <h6 class="card-title">{{ hotel.getName() }}</h6>
+                                    <p class="text-muted small mb-2">
+                                        <i class="bi bi-geo-alt"></i> {{ hotel.getLocation() }}
+                                    </p>
+
+                                    <div class="rating mb-2">
+                                        <small>
+                                            <i class="bi bi-star-fill text-warning"></i>
+                                            {{ hotel.getRating()|number_format(1, ',', '.') }}
+                                            <span class="text-muted">({{ hotel.getReviewCount() }})</span>
+                                        </small>
+                                    </div>
+
+                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                        <div>
+                                            <strong class="text-primary">€{{ hotel.getPrice()|number_format(0, ',', '.') }}</strong>
+                                            <small class="text-muted">/Nacht</small>
+                                        </div>
+                                        <a href="/hotels/detail?id={{ hotel.getId() }}" class="btn btn-outline-primary btn-sm">Ansehen</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% if regularHotels|length == 0 %}
+                <div class="text-center py-5">
+                    <p class="text-muted">Keine Hotels gefunden.</p>
+                </div>
+                {% endif %}
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .hotels-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 100px 0 50px;
+        margin-top: -76px;
+        padding-top: 156px;
+    }
+
+    .hotel-card .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        overflow: hidden;
+    }
+
+    .hotel-card .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(0,0,0,0.15) !important;
+    }
+
+    .hotel-card.featured {
+        position: relative;
+    }
+
+    .featured-badge {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        z-index: 10;
+    }
+
+    .amenities .badge {
+        font-weight: normal;
+        font-size: 0.75rem;
+    }
+
+    .rating i {
+        color: #ffc107;
+    }
+
+    .placeholder-image {
+        background: linear-gradient(45deg, #f0f0f0 25%, #e0e0e0 25%, #e0e0e0 50%, #f0f0f0 50%, #f0f0f0 75%, #e0e0e0 75%, #e0e0e0);
+        background-size: 20px 20px;
+        animation: loading 1s linear infinite;
+    }
+
+    @keyframes loading {
+        0% {
+            background-position: 0 0;
+        }
+        100% {
+            background-position: 20px 20px;
+        }
+    }
+
+    .hotel-search-bar {
+        max-width: 900px;
+        margin: 0 auto;
+    }
+</style>
+{% endblock %}

@@ -1,0 +1,30 @@
+{% extends 'layouts/layout.html.twig' %}
+
+{% block content %}
+    <div class="container">
+        <div class="content-page">
+            {# Page Title #}
+            {% if pimcore_input('headline') %}
+                <h1>{{ pimcore_input('headline', {'placeholder': 'Seitentitel'}) }}</h1>
+            {% endif %}
+            
+            {# Main Content Area #}
+            {{ pimcore_areablock('contentArea', {
+                'allowed': ['wysiwyg-text', 'image', 'slider', 'cols', 'product-grid'],
+                'group': {
+                    'Layout': ['cols'],
+                    'Content': ['wysiwyg-text', 'product-grid'],
+                    'Media': ['image', 'slider']
+                },
+                'params': {
+                    'cols': {
+                        'forceEditInView': true
+                    },
+                    'slider': {
+                        'forceEditInView': true
+                    }
+                }
+            }) }}
+        </div>
+    </div>
+{% endblock %}

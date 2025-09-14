@@ -72,3 +72,12 @@ services:
     # App\EventListener\TestListener:
     #     tags:
     #         - { name: kernel.event_listener, event: pimcore.dataobject.preUpdate, method: onObjectPreUpdate }
+
+    #
+    # AREABRICKS
+    #
+    
+    # Register Slider Areabrick
+    App\Document\Areabrick\Slider:
+        tags:
+            - { name: pimcore.area.brick, id: slider }

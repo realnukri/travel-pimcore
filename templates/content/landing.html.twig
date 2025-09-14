@@ -1,0 +1,56 @@
+{% extends 'layouts/layout.html.twig' %}
+
+{% block content %}
+    {# Hero Section #}
+    <section class="hero-section">
+        {{ pimcore_areablock('heroArea', {
+            'allowed': ['slider', 'image'],
+            'limit': 1,
+            'params': {
+                'slider': {
+                    'forceEditInView': true
+                }
+            }
+        }) }}
+    </section>
+    
+    {# Main Content #}
+    <section class="main-content-section">
+        <div class="container">
+            {{ pimcore_areablock('mainContent', {
+                'allowed': ['cols', 'wysiwyg-text', 'image', 'slider', 'product-grid'],
+                'group': {
+                    'Layout': ['cols'],
+                    'Content': ['wysiwyg-text', 'product-grid'],
+                    'Media': ['image', 'slider']
+                },
+                'params': {
+                    'cols': {
+                        'forceEditInView': true
+                    },
+                    'slider': {
+                        'forceEditInView': true
+                    }
+                }
+            }) }}
+        </div>
+    </section>
+    
+    {# Bottom Section #}
+    <section class="bottom-section">
+        <div class="container">
+            {{ pimcore_areablock('bottomContent', {
+                'allowed': ['cols', 'wysiwyg-text', 'product-grid'],
+                'group': {
+                    'Layout': ['cols'],
+                    'Content': ['wysiwyg-text', 'product-grid']
+                },
+                'params': {
+                    'cols': {
+                        'forceEditInView': true
+                    }
+                }
+            }) }}
+        </div>
+    </section>
+{% endblock %}

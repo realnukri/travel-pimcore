@@ -20,83 +20,39 @@ class FlightsController extends FrontendController
         $flightListing->setCondition('published = 1');
         $flightListing->setOrderKey('price');
         $flightListing->setOrder('ASC');
-        $flightListing->setLimit(6);
+        $flightListing->setLimit(20);
 
         $flights = $flightListing->load();
 
-        // Popular destinations - could be fetched from DataObjects or hardcoded
-        $popularDestinations = [
-            [
-                'city' => 'Paris',
-                'country' => 'Frankreich',
-                'price' => 'ab €89',
-                'image' => '🇫🇷',
-                'departure' => 'Berlin',
-                'arrival' => 'Paris',
-                'airline' => 'Air France'
-            ],
-            [
-                'city' => 'Rom',
-                'country' => 'Italien',
-                'price' => 'ab €79',
-                'image' => '🇮🇹',
-                'departure' => 'Berlin',
-                'arrival' => 'Rom',
-                'airline' => 'Alitalia'
-            ],
-            [
-                'city' => 'Barcelona',
-                'country' => 'Spanien',
-                'price' => 'ab €65',
-                'image' => '🇪🇸',
-                'departure' => 'Berlin',
-                'arrival' => 'Barcelona',
-                'airline' => 'Vueling'
-            ],
-            [
-                'city' => 'Amsterdam',
-                'country' => 'Niederlande',
-                'price' => 'ab €59',
-                'image' => '🇳🇱',
-                'departure' => 'Berlin',
-                'arrival' => 'Amsterdam',
-                'airline' => 'KLM'
-            ],
-            [
-                'city' => 'Wien',
-                'country' => 'Österreich',
-                'price' => 'ab €69',
-                'image' => '🇦🇹',
-                'departure' => 'Berlin',
-                'arrival' => 'Wien',
-                'airline' => 'Austrian Airlines'
-            ],
-            [
-                'city' => 'Prag',
-                'country' => 'Tschechien',
-                'price' => 'ab €55',
-                'image' => '🇨🇿',
-                'departure' => 'Berlin',
-                'arrival' => 'Prag',
-                'airline' => 'Czech Airlines'
-            ]
-        ];
-
-        // If flights DataObjects exist, use them instead
-        if (!empty($flights)) {
-            $popularDestinations = [];
-            foreach ($flights as $flight) {
-                $popularDestinations[] = [
-                    'city' => $flight->getArrivalCity() ?: 'Unknown',
-                    'country' => $flight->getArrivalCountry() ?: 'Unknown',
-                    'price' => 'ab €' . ($flight->getPrice() ?: '0'),
-                    'image' => $this->getCountryFlag($flight->getArrivalCountry()),
-                    'departure' => $flight->getDepartureCity() ?: 'Unknown',
-                    'arrival' => $flight->getArrivalCity() ?: 'Unknown',
-                    'airline' => $flight->getAirline() ?: 'Unknown Airline'
+        // Group flights by destination for popular destinations
+        $destinationGroups = [];
+        foreach ($flights as $flight) {
+            $destination = $flight->getTo();
+            if (!isset($destinationGroups[$destination])) {
+                $destinationGroups[$destination] = [
+                    'city' => $destination,
+                    'country' => $this->getCountryForCity($destination),
+                    'lowestPrice' => $flight->getPrice(),
+                    'cheapestFlightId' => $flight->getId(),
+                    'flights' => []
                 ];
             }
+            
+            // Update lowest price and cheapest flight ID if this flight is cheaper
+            if ($flight->getPrice() < $destinationGroups[$destination]['lowestPrice']) {
+                $destinationGroups[$destination]['lowestPrice'] = $flight->getPrice();
+                $destinationGroups[$destination]['cheapestFlightId'] = $flight->getId();
+            }
+            
+            $destinationGroups[$destination]['flights'][] = $flight;
         }
+
+        // Sort by lowest price and take top 6 destinations
+        uasort($destinationGroups, function($a, $b) {
+            return $a['lowestPrice'] <=> $b['lowestPrice'];
+        });
+        
+        $popularDestinations = array_slice($destinationGroups, 0, 6, true);
 
         // Features
         $features = [
@@ -130,6 +86,42 @@ class FlightsController extends FrontendController
     }
 
     /**
+     * @Route("/flights/{id}", name="flight_detail", requirements={"id"="\d+"})
+     */
+    public function detailAction($id): Response
+    {
+        $flight = Flight::getById($id);
+        
+        if (!$flight || !$flight->isPublished()) {
+            throw $this->createNotFoundException('Flight not found');
+        }
+        
+        // Calculate total price with taxes
+        $basePrice = $flight->getPrice();
+        $taxes = round($basePrice * 0.15);
+        $totalPrice = $basePrice + $taxes;
+        
+        // Get similar flights (same route)
+        $similarFlightsListing = new Flight\Listing();
+        $similarFlightsListing->setCondition(
+            "`from` = ? AND `to` = ? AND published = 1 AND oo_id != ?", 
+            [$flight->getFrom(), $flight->getTo(), $flight->getId()]
+        );
+        $similarFlightsListing->setLimit(3);
+        $similarFlightsListing->setOrderKey('price');
+        $similarFlightsListing->setOrder('ASC');
+        $similarFlights = $similarFlightsListing->load();
+        
+        return $this->render('flights/detail.html.twig', [
+            'flight' => $flight,
+            'basePrice' => $basePrice,
+            'taxes' => $taxes,
+            'totalPrice' => $totalPrice,
+            'similarFlights' => $similarFlights
+        ]);
+    }
+    
+    /**
      * @Route("/flights/search", name="flights_search")
      */
     public function searchAction(Request $request): Response
@@ -140,26 +132,20 @@ class FlightsController extends FrontendController
         $returnDate = $request->get('return_date');
         $passengers = $request->get('passengers', 1);
 
-        $flightListing = new Flights\Listing();
+        $flightListing = new Flight\Listing();
+        $flightListing->setCondition('published = 1');
 
-        $conditions = ['published = 1'];
-
-        if ($departure) {
-            $conditions[] = "departureCity LIKE :departure";
-            $flightListing->setConditionParam('departure', '%' . $departure . '%');
+        // Filter by departure and arrival cities
+        if ($departure && $arrival) {
+            $flightListing->setCondition("`from` = ? AND `to` = ? AND published = 1", [$departure, $arrival]);
+        } elseif ($departure) {
+            $flightListing->setCondition("`from` = ? AND published = 1", [$departure]);
+        } elseif ($arrival) {
+            $flightListing->setCondition("`to` = ? AND published = 1", [$arrival]);
         }
 
-        if ($arrival) {
-            $conditions[] = "arrivalCity LIKE :arrival";
-            $flightListing->setConditionParam('arrival', '%' . $arrival . '%');
-        }
-
-        if ($departureDate) {
-            $conditions[] = "departureDate >= :departureDate";
-            $flightListing->setConditionParam('departureDate', $departureDate);
-        }
-
-        $flightListing->setCondition(implode(' AND ', $conditions));
+        $flightListing->setOrderKey('price');
+        $flightListing->setOrder('ASC');
         $searchResults = $flightListing->load();
 
         return $this->render('flights/search.html.twig', [
@@ -174,6 +160,51 @@ class FlightsController extends FrontendController
         ]);
     }
 
+    private function getCountryForCity($city): string
+    {
+        $cityCountryMap = [
+            'Paris' => 'Frankreich',
+            'Rom' => 'Italien',
+            'Mailand' => 'Italien',
+            'Venedig' => 'Italien',
+            'Barcelona' => 'Spanien',
+            'Madrid' => 'Spanien',
+            'Amsterdam' => 'Niederlande',
+            'Wien' => 'Österreich',
+            'Prag' => 'Tschechien',
+            'Berlin' => 'Deutschland',
+            'München' => 'Deutschland',
+            'Frankfurt' => 'Deutschland',
+            'Hamburg' => 'Deutschland',
+            'Köln' => 'Deutschland',
+            'Stuttgart' => 'Deutschland',
+            'Düsseldorf' => 'Deutschland',
+            'Nürnberg' => 'Deutschland',
+            'London' => 'Vereinigtes Königreich',
+            'New York' => 'USA',
+            'Dubai' => 'VAE',
+            'Istanbul' => 'Türkei',
+            'Antalya' => 'Türkei',
+            'Athen' => 'Griechenland',
+            'Santorini' => 'Griechenland',
+            'Lissabon' => 'Portugal',
+            'Porto' => 'Portugal',
+            'Stockholm' => 'Schweden',
+            'Oslo' => 'Norwegen',
+            'Kopenhagen' => 'Dänemark',
+            'Warschau' => 'Polen',
+            'Krakau' => 'Polen',
+            'Zürich' => 'Schweiz',
+            'Genf' => 'Schweiz',
+            'Bangkok' => 'Thailand',
+            'Singapur' => 'Singapur',
+            'Tokyo' => 'Japan',
+            'Sydney' => 'Australien'
+        ];
+
+        return $cityCountryMap[$city] ?? 'International';
+    }
+
     private function getCountryFlag($country): string
     {
         $flags = [
@@ -186,8 +217,20 @@ class FlightsController extends FrontendController
             'Deutschland' => '🇩🇪',
             'Vereinigtes Königreich' => '🇬🇧',
             'USA' => '🇺🇸',
-            'Kanada' => '🇨🇦',
+            'VAE' => '🇦🇪',
+            'Türkei' => '🇹🇷',
+            'Griechenland' => '🇬🇷',
+            'Portugal' => '🇵🇹',
+            'Schweden' => '🇸🇪',
+            'Norwegen' => '🇳🇴',
+            'Dänemark' => '🇩🇰',
+            'Polen' => '🇵🇱',
+            'Schweiz' => '🇨🇭',
+            'Thailand' => '🇹🇭',
+            'Singapur' => '🇸🇬',
             'Japan' => '🇯🇵',
+            'Australien' => '🇦🇺',
+            'Kanada' => '🇨🇦',
             'China' => '🇨🇳'
         ];
 

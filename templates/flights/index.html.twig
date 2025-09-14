@@ -3,201 +3,7 @@
 {% block title %}Flüge - TravelExplorer{% endblock %}
 
 {% block stylesheets %}
-<style>
-    .hero-section {
-        padding-top: 2rem;
-        padding-bottom: 4rem;
-        background: linear-gradient(135deg, #EBF8FF 0%, #E0E7FF 100%);
-    }
-    
-    .search-widget {
-        background: white;
-        border-radius: 1rem;
-        padding: 2rem;
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-        margin-top: 2rem;
-    }
-    
-    .search-form {
-        display: grid;
-        gap: 1rem;
-        grid-template-columns: 1fr;
-    }
-    
-    @media (min-width: 768px) {
-        .search-form {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-    
-    @media (min-width: 1024px) {
-        .search-form {
-            grid-template-columns: repeat(5, 1fr);
-        }
-    }
-    
-    .form-group {
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .form-label {
-        font-size: 0.875rem;
-        font-weight: 500;
-        color: #4B5563;
-        margin-bottom: 0.5rem;
-    }
-    
-    .form-input {
-        padding: 0.75rem;
-        border: 1px solid #E5E7EB;
-        border-radius: 0.5rem;
-        font-size: 1rem;
-        transition: all 0.2s;
-    }
-    
-    .form-input:focus {
-        outline: none;
-        border-color: #3B82F6;
-        box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-    }
-    
-    .search-button {
-        grid-column: span 1;
-        padding: 0.75rem 2rem;
-        background: linear-gradient(135deg, #3B82F6 0%, #9333EA 100%);
-        color: white;
-        border: none;
-        border-radius: 0.5rem;
-        font-weight: 600;
-        cursor: pointer;
-        transition: all 0.3s;
-        align-self: end;
-    }
-    
-    @media (min-width: 1024px) {
-        .search-button {
-            grid-column: span 1;
-        }
-    }
-    
-    .search-button:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
-    }
-    
-    .destination-card {
-        background: white;
-        border-radius: 0.75rem;
-        padding: 1.5rem;
-        box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
-        transition: all 0.3s;
-        cursor: pointer;
-    }
-    
-    .destination-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.15);
-    }
-    
-    .destination-header {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 1rem;
-    }
-    
-    .destination-flag {
-        font-size: 3rem;
-    }
-    
-    .destination-price {
-        text-align: right;
-    }
-    
-    .price-amount {
-        font-size: 1.5rem;
-        font-weight: 700;
-        color: #3B82F6;
-    }
-    
-    .price-label {
-        font-size: 0.75rem;
-        color: #6B7280;
-    }
-    
-    .destination-info h3 {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 0.25rem;
-    }
-    
-    .destination-country {
-        color: #6B7280;
-    }
-    
-    .features-section {
-        background: #FAFAFA;
-        padding: 4rem 0;
-    }
-    
-    .features-grid {
-        display: grid;
-        grid-template-columns: 1fr;
-        gap: 2rem;
-    }
-    
-    @media (min-width: 768px) {
-        .features-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
-    }
-    
-    @media (min-width: 1024px) {
-        .features-grid {
-            grid-template-columns: repeat(4, 1fr);
-        }
-    }
-    
-    .feature-item {
-        text-align: center;
-    }
-    
-    .feature-icon {
-        width: 64px;
-        height: 64px;
-        background: rgba(59, 130, 246, 0.1);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin: 0 auto 1rem;
-    }
-    
-    .feature-icon svg {
-        width: 32px;
-        height: 32px;
-        stroke: #3B82F6;
-    }
-    
-    .feature-title {
-        font-size: 1.25rem;
-        font-weight: 600;
-        margin-bottom: 0.5rem;
-    }
-    
-    .feature-description {
-        color: #6B7280;
-        line-height: 1.6;
-    }
-    
-    .section-title {
-        font-size: 2rem;
-        font-weight: 700;
-        text-align: center;
-        margin-bottom: 3rem;
-    }
-</style>
+    {{ parent() }}
 {% endblock %}
 
 {% block content %}
@@ -223,8 +29,19 @@
                            id="departure" 
                            name="departure" 
                            class="form-input" 
-                           placeholder="Abflugort"
+                           placeholder="z.B. Berlin, München, Frankfurt"
+                           list="departure-cities"
                            required>
+                    <datalist id="departure-cities">
+                        <option value="Berlin">
+                        <option value="München">
+                        <option value="Frankfurt">
+                        <option value="Hamburg">
+                        <option value="Köln">
+                        <option value="Stuttgart">
+                        <option value="Düsseldorf">
+                        <option value="Nürnberg">
+                    </datalist>
                 </div>
                 
                 <div class="form-group">
@@ -233,8 +50,24 @@
                            id="arrival" 
                            name="arrival" 
                            class="form-input" 
-                           placeholder="Zielort"
+                           placeholder="z.B. Paris, London, Rom"
+                           list="arrival-cities"
                            required>
+                    <datalist id="arrival-cities">
+                        <option value="Paris">
+                        <option value="London">
+                        <option value="Rom">
+                        <option value="Barcelona">
+                        <option value="Amsterdam">
+                        <option value="Wien">
+                        <option value="Prag">
+                        <option value="Madrid">
+                        <option value="Mailand">
+                        <option value="Venedig">
+                        <option value="New York">
+                        <option value="Dubai">
+                        <option value="Istanbul">
+                    </datalist>
                 </div>
                 
                 <div class="form-group">
@@ -243,6 +76,7 @@
                            id="departure_date" 
                            name="departure_date" 
                            class="form-input"
+                           min="{{ 'now'|date('Y-m-d') }}"
                            required>
                 </div>
                 
@@ -251,7 +85,8 @@
                     <input type="date" 
                            id="return_date" 
                            name="return_date" 
-                           class="form-input">
+                           class="form-input"
+                           min="{{ 'now'|date('Y-m-d') }}">
                 </div>
                 
                 <button type="submit" class="search-button">
@@ -261,32 +96,110 @@
         </div>
     </section>
     
-    {# Popular Destinations #}
+    {# Popular Destinations from Data Objects #}
+    {% if popularDestinations %}
     <section style="padding: 4rem 0;">
         <h2 class="section-title">Beliebte Reiseziele</h2>
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem;">
-            {% for destination in popularDestinations %}
-            <div class="destination-card">
+            {% for destination, data in popularDestinations %}
+            <a href="{{ path('flight_detail', {'id': data.cheapestFlightId}) }}" class="destination-card" style="display: block; text-decoration: none; color: inherit;">
                 <div class="destination-header">
-                    <div class="destination-flag">{{ destination.image }}</div>
+                    <div class="destination-flag">✈️</div>
                     <div class="destination-price">
-                        <div class="price-amount">{{ destination.price }}</div>
+                        <div class="price-amount">ab €{{ data.lowestPrice }}</div>
                         <div class="price-label">pro Person</div>
                     </div>
                 </div>
                 <div class="destination-info">
-                    <h3>{{ destination.city }}</h3>
-                    <p class="destination-country">{{ destination.country }}</p>
-                    {% if destination.airline %}
+                    <h3>{{ data.city }}</h3>
+                    <p class="destination-country">{{ data.country }}</p>
                     <p style="margin-top: 0.5rem; font-size: 0.875rem; color: #9CA3AF;">
-                        mit {{ destination.airline }}
+                        {{ data.flights|length }} Flüge verfügbar
                     </p>
-                    {% endif %}
                 </div>
-            </div>
+            </a>
             {% endfor %}
         </div>
     </section>
+    {% endif %}
+    
+    {# All Flights from Data Objects #}
+    {% if flights %}
+    <section class="flights-section">
+        <h2 class="section-title">Verfügbare Flüge</h2>
+        <div class="flights-grid">
+            {% for flight in flights %}
+            <a href="{{ path('flight_detail', {'id': flight.getId()}) }}" class="flight-card" style="display: block; text-decoration: none; color: inherit;">
+                <div class="flight-header">
+                    <div class="flight-route">
+                        <div class="flight-cities">
+                            <span>{{ flight.getFrom() }}</span>
+                            <span>→</span>
+                            <span>{{ flight.getTo() }}</span>
+                        </div>
+                        <div class="flight-times">
+                            <span>{{ flight.getDepartureTime() }}</span>
+                            <span>-</span>
+                            <span>{{ flight.getArrivalTime() }}</span>
+                        </div>
+                    </div>
+                    <div class="flight-price-badge">
+                        €{{ flight.getPrice() }}
+                    </div>
+                </div>
+                
+                <div class="flight-details">
+                    <div class="flight-detail-item">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>{{ flight.getDuration() }}</span>
+                    </div>
+                    <div class="flight-detail-item">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14M12 5l7 7-7 7"/>
+                        </svg>
+                        <span>{{ flight.getAirline('de') }}</span>
+                    </div>
+                    <div class="flight-detail-item">
+                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>{{ flight.getStops() }}</span>
+                    </div>
+                    <div class="flight-detail-item">
+                        {% if flight.getRating() %}
+                        <span class="rating-stars">
+                            {% for i in 1..5 %}
+                                {% if i <= flight.getRating() %}★{% else %}☆{% endif %}
+                            {% endfor %}
+                        </span>
+                        <span>{{ flight.getRating() }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                {% if flight.getAmenities() %}
+                <div class="flight-amenities">
+                    {% for amenity in flight.getAmenities() %}
+                    <span class="amenity-tag">{{ amenity }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                {% if flight.getBaggage() %}
+                <div style="margin-top: 0.75rem; font-size: 0.75rem; color: #6B7280;">
+                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display: inline-block; vertical-align: middle;">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"/>
+                    </svg>
+                    {{ flight.getBaggage() }}
+                </div>
+                {% endif %}
+            </a>
+            {% endfor %}
+        </div>
+    </section>
+    {% endif %}
     
     {# Features #}
     <section class="features-section">

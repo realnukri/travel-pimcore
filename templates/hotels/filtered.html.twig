@@ -1,0 +1,210 @@
+{% extends 'layouts/layout.html.twig' %}
+
+{% block title %}Hotels filtern - TravelExplorer{% endblock %}
+
+{% block content %}
+    <div class="hotels-filtered-page">
+        {# Header Section #}
+        <section class="filter-header py-5 bg-light">
+            <div class="container">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="{{ path('hotels_default') }}">Hotels</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Suchergebnisse</li>
+                    </ol>
+                </nav>
+
+                <h1 class="mb-3">Gefilterte Hotels</h1>
+
+                {# Active Filters Display #}
+                <div class="active-filters mb-4">
+                    {% if filters.location %}
+                    <span class="badge bg-primary me-2">
+                        <i class="bi bi-geo-alt"></i> {{ filters.location }}
+                        <a href="{{ path('hotels_filter', filters|merge({location: null})) }}" class="text-white ms-1">×</a>
+                    </span>
+                    {% endif %}
+
+                    {% if filters.minPrice > 0 %}
+                    <span class="badge bg-primary me-2">
+                        Min: €{{ filters.minPrice }}
+                        <a href="{{ path('hotels_filter', filters|merge({min_price: null})) }}" class="text-white ms-1">×</a>
+                    </span>
+                    {% endif %}
+
+                    {% if filters.maxPrice < 10000 %}
+                    <span class="badge bg-primary me-2">
+                        Max: €{{ filters.maxPrice }}
+                        <a href="{{ path('hotels_filter', filters|merge({max_price: null})) }}" class="text-white ms-1">×</a>
+                    </span>
+                    {% endif %}
+
+                    {% if filters.minRating %}
+                    <span class="badge bg-primary me-2">
+                        {{ filters.minRating }}+ Sterne
+                        <a href="{{ path('hotels_filter', filters|merge({min_rating: null})) }}" class="text-white ms-1">×</a>
+                    </span>
+                    {% endif %}
+
+                    {% if filters.featured %}
+                    <span class="badge bg-warning text-dark me-2">
+                        Nur empfohlene Hotels
+                        <a href="{{ path('hotels_filter', filters|merge({featured: null})) }}" class="text-dark ms-1">×</a>
+                    </span>
+                    {% endif %}
+
+                    {% if filters.location or filters.minPrice > 0 or filters.maxPrice < 10000 or filters.minRating or filters.featured %}
+                    <a href="{{ path('hotels_default') }}" class="btn btn-sm btn-outline-secondary">Filter zurücksetzen</a>
+                    {% endif %}
+                </div>
+
+                <p class="text-muted">{{ hotels|length }} Hotel(s) gefunden</p>
+            </div>
+        </section>
+
+        {# Results Section #}
+        <section class="py-5">
+            <div class="container">
+                <div class="row">
+                    {# Sidebar with Filters #}
+                    <div class="col-lg-3 mb-4">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title mb-3">Filter verfeinern</h5>
+                                <form action="{{ path('hotels_filter') }}" method="get">
+                                    <div class="mb-3">
+                                        <label class="form-label">Reiseziel</label>
+                                        <input type="text" name="location" class="form-control" value="{{ filters.location }}" placeholder="Stadt oder Land">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Preis pro Nacht</label>
+                                        <div class="row g-2">
+                                            <div class="col">
+                                                <input type="number" name="min_price" class="form-control" value="{{ filters.minPrice }}" placeholder="Min" min="0">
+                                            </div>
+                                            <div class="col">
+                                                <input type="number" name="max_price" class="form-control" value="{{ filters.maxPrice }}" placeholder="Max" min="0">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Mindestbewertung</label>
+                                        <select name="min_rating" class="form-control">
+                                            <option value="">Alle</option>
+                                            <option value="4.5" {% if filters.minRating == 4.5 %}selected{% endif %}>4.5+ Sterne</option>
+                                            <option value="4" {% if filters.minRating == 4 %}selected{% endif %}>4+ Sterne</option>
+                                            <option value="3.5" {% if filters.minRating == 3.5 %}selected{% endif %}>3.5+ Sterne</option>
+                                            <option value="3" {% if filters.minRating == 3 %}selected{% endif %}>3+ Sterne</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <div class="form-check">
+                                            <input class="form-check-input" type="checkbox" name="featured" value="1" id="featuredCheck" {% if filters.featured %}checked{% endif %}>
+                                            <label class="form-check-label" for="featuredCheck">
+                                                Nur empfohlene Hotels
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary w-100">Filter anwenden</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+
+                    {# Hotel Results #}
+                    <div class="col-lg-9">
+                        {% if hotels|length > 0 %}
+                            <div class="row">
+                                {% for hotel in hotels %}
+                                <div class="col-md-6 mb-4">
+                                    <div class="card h-100 hotel-card-horizontal">
+                                        <div class="row g-0 h-100">
+                                            <div class="col-md-5">
+                                                {% if hotel.getImage() %}
+                                                <img src="{{ hotel.getImage().getThumbnail('hotel-card') }}" class="img-fluid rounded-start h-100" alt="{{ hotel.getName() }}" style="object-fit: cover;">
+                                                {% else %}
+                                                <div class="placeholder-image h-100 rounded-start d-flex align-items-center justify-content-center">
+                                                    <i class="bi bi-building" style="font-size: 2rem; color: #ccc;"></i>
+                                                </div>
+                                                {% endif %}
+                                            </div>
+                                            <div class="col-md-7">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ hotel.getName() }}</h5>
+                                                    <p class="text-muted small mb-2">
+                                                        <i class="bi bi-geo-alt"></i> {{ hotel.getLocation() }}
+                                                    </p>
+
+                                                    <div class="mb-2">
+                                                        <span class="badge bg-primary">
+                                                            <i class="bi bi-star-fill"></i> {{ hotel.getRating()|number_format(1, ',', '.') }}
+                                                        </span>
+                                                        <small class="text-muted">({{ hotel.getReviewCount() }} Bewertungen)</small>
+                                                        {% if hotel.getFeatured() %}
+                                                        <span class="badge bg-warning text-dark ms-2">Empfohlen</span>
+                                                        {% endif %}
+                                                    </div>
+
+                                                    <p class="card-text small">{{ hotel.getDescription()|slice(0, 80) }}...</p>
+
+                                                    <div class="d-flex justify-content-between align-items-center mt-3">
+                                                        <div>
+                                                            <span class="h5 text-primary mb-0">€{{ hotel.getPrice()|number_format(0, ',', '.') }}</span>
+                                                            <small class="text-muted">/Nacht</small>
+                                                        </div>
+                                                        <a href="{{ path('hotels_detail', {id: hotel.getId()}) }}" class="btn btn-outline-primary btn-sm">Details</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        {% else %}
+                            <div class="alert alert-info text-center">
+                                <i class="bi bi-info-circle me-2"></i>
+                                Keine Hotels gefunden, die Ihren Filterkriterien entsprechen.
+                                <br>
+                                <a href="{{ path('hotels_default') }}" class="btn btn-primary mt-3">Alle Hotels anzeigen</a>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
+
+{% block stylesheets %}
+<style>
+    .filter-header {
+        border-bottom: 1px solid #dee2e6;
+    }
+
+    .active-filters .badge a {
+        text-decoration: none;
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+
+    .hotel-card-horizontal {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .hotel-card-horizontal:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1) !important;
+    }
+
+    .placeholder-image {
+        background: #f0f0f0;
+        min-height: 200px;
+    }
+</style>
+{% endblock %}

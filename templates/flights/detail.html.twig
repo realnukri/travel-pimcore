@@ -1,0 +1,236 @@
+{% extends 'layouts/layout.html.twig' %}
+
+{% block title %}{{ flight.getFrom() }} → {{ flight.getTo() }} - Flugdetails{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="detail-header">
+        <a href="{{ path('flights') }}" class="back-button">
+            ← Zurück zur Suche
+        </a>
+    </div>
+    
+    <div class="detail-grid">
+        {# Main Content #}
+        <div>
+            {# Flight Information Card #}
+            <div class="flight-card">
+                <div class="flight-header-info">
+                    <div class="airline-info">
+                        <div class="airline-logo">✈️</div>
+                        <div class="airline-details">
+                            <h1>{{ flight.getAirline('de') }}</h1>
+                            <p class="flight-number">Flugnummer: {{ flight.getKey()|upper }}</p>
+                        </div>
+                    </div>
+                    {% if flight.getRating() %}
+                    <div class="rating-badge">
+                        <span class="rating-stars">
+                            {% for i in 1..5 %}
+                                {% if i <= flight.getRating() %}★{% else %}☆{% endif %}
+                            {% endfor %}
+                        </span>
+                        <span>{{ flight.getRating() }}</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                {# Route Details #}
+                <div class="route-details">
+                    <div class="departure-info">
+                        <div class="time-display">{{ flight.getDepartureTime() }}</div>
+                        <div class="city-display">{{ flight.getFrom() }}</div>
+                        <div class="date-display">
+                            📅 {{ 'now'|date('l, d. F Y') }}
+                        </div>
+                    </div>
+                    
+                    <div class="flight-path">
+                        <div class="duration-badge">
+                            🕐 {{ flight.getDuration() }}
+                        </div>
+                        <div class="flight-line">
+                            <div class="flight-line-bar"></div>
+                            <span class="plane-icon">✈️</span>
+                            <div class="flight-line-bar"></div>
+                        </div>
+                        <div class="stops-info">{{ flight.getStops() }}</div>
+                    </div>
+                    
+                    <div class="arrival-info">
+                        <div class="time-display">{{ flight.getArrivalTime() }}</div>
+                        <div class="city-display">{{ flight.getTo() }}</div>
+                        <div class="date-display">
+                            📅 {{ 'now'|date('l, d. F Y') }}
+                        </div>
+                    </div>
+                </div>
+                
+                {# Aircraft & Details #}
+                <div class="details-section">
+                    <h3>Flugdetails</h3>
+                    
+                    <div class="detail-item">
+                        <span class="detail-icon">🛩️</span>
+                        <span><strong>Flugzeugtyp:</strong> {{ flight.getAircraft('de') }}</span>
+                    </div>
+                    
+                    <div class="detail-item">
+                        <span class="detail-icon">💼</span>
+                        <span><strong>Gepäck:</strong> {{ flight.getBaggage() }}</span>
+                    </div>
+                </div>
+                
+                {# Amenities #}
+                {% if flight.getAmenities() %}
+                <div class="details-section">
+                    <h3>Annehmlichkeiten</h3>
+                    <div class="amenities-grid">
+                        {% for amenity in flight.getAmenities() %}
+                        <div class="amenity-item">
+                            {% if 'wifi' in amenity|lower %}
+                                📶
+                            {% elseif 'mahlzeit' in amenity|lower or 'snack' in amenity|lower %}
+                                🍽️
+                            {% elseif 'entertainment' in amenity|lower %}
+                                🎬
+                            {% elseif 'lounge' in amenity|lower %}
+                                🛋️
+                            {% elseif 'priority' in amenity|lower %}
+                                ⭐
+                            {% else %}
+                                ✓
+                            {% endif %}
+                            {{ amenity }}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            {# Important Information #}
+            <div class="flight-card">
+                <h3 style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1.5rem;">Wichtige Informationen</h3>
+                
+                <div class="info-cards">
+                    <div class="info-card">
+                        <h4>
+                            ℹ️ Check-in
+                        </h4>
+                        <p>
+                            Online Check-in öffnet 24 Stunden vor Abflug. Bitte erscheinen Sie mindestens 2 Stunden vor Abflug am Flughafen.
+                        </p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h4>
+                            🛡️ Sicherheit
+                        </h4>
+                        <p>
+                            Bitte beachten Sie die aktuellen Sicherheitsbestimmungen für Handgepäck und Flüssigkeiten.
+                        </p>
+                    </div>
+                    
+                    <div class="info-card">
+                        <h4>
+                            📍 Terminal-Information
+                        </h4>
+                        <p>
+                            Die Terminal-Informationen werden 24 Stunden vor Abflug bekannt gegeben.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+            {# Similar Flights #}
+            {% if similarFlights %}
+            <div class="similar-flights">
+                <h3>Ähnliche Flüge</h3>
+                <div class="similar-flights-grid">
+                    {% for similarFlight in similarFlights %}
+                    <a href="{{ path('flight_detail', {'id': similarFlight.getId()}) }}" class="similar-flight-card">
+                        <div class="similar-flight-route">
+                            {{ similarFlight.getFrom() }} → {{ similarFlight.getTo() }}
+                        </div>
+                        <div style="color: #6B7280; font-size: 0.875rem;">
+                            {{ similarFlight.getDepartureTime() }} - {{ similarFlight.getArrivalTime() }}
+                        </div>
+                        <div style="color: #6B7280; font-size: 0.875rem; margin-top: 0.25rem;">
+                            {{ similarFlight.getAirline('de') }}
+                        </div>
+                        <div class="similar-flight-details">
+                            <span style="color: #6B7280; font-size: 0.875rem;">{{ similarFlight.getDuration() }}</span>
+                            <div class="similar-flight-price">€{{ similarFlight.getPrice() }}</div>
+                        </div>
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        {# Sidebar #}
+        <div>
+            {# Booking Card #}
+            <div class="booking-card">
+                <h2>Buchungsübersicht</h2>
+                
+                <div class="price-breakdown">
+                    <div class="price-line">
+                        <span>Grundpreis</span>
+                        <span style="font-weight: 600;">€{{ basePrice }}</span>
+                    </div>
+                    <div class="price-line">
+                        <span>Steuern & Gebühren</span>
+                        <span style="font-weight: 600;">€{{ taxes }}</span>
+                    </div>
+                    <div class="price-line total">
+                        <span>Gesamtpreis</span>
+                        <span class="total-price">€{{ totalPrice }}</span>
+                    </div>
+                    <p style="font-size: 0.75rem; color: #6B7280; margin-top: 0.5rem;">
+                        Pro Person, inkl. aller Steuern und Gebühren
+                    </p>
+                </div>
+                
+                <button class="book-button">
+                    💳 Jetzt buchen
+                </button>
+                
+                <div class="booking-features">
+                    <div class="booking-feature">
+                        ✓ Kostenlose Stornierung bis 24h vor Abflug
+                    </div>
+                    <div class="booking-feature">
+                        ✓ Sichere Zahlung
+                    </div>
+                    <div class="booking-feature">
+                        ✓ Bestpreisgarantie
+                    </div>
+                </div>
+            </div>
+            
+            {# Contact Card #}
+            <div class="contact-card">
+                <h3>Brauchen Sie Hilfe?</h3>
+                <p style="color: #6B7280; font-size: 0.875rem;">
+                    Unser Kundenservice ist 24/7 für Sie da.
+                </p>
+                <div class="contact-buttons">
+                    <a href="tel:+493012345678" class="contact-button">
+                        📞 +49 30 12345678
+                    </a>
+                    <a href="mailto:support@reiseportal.de" class="contact-button">
+                        ✉️ support@reiseportal.de
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

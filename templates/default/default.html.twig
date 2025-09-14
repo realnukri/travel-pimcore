@@ -4,9 +4,20 @@
 
     <div id="main-content">
         {{ pimcore_areablock('content', {
-            "group": {
-                "Image": ["image"],
+            'allowed': ['cols', 'wysiwyg-text', 'image', 'product-grid', 'slider'],
+            'group': {
+                'Layout': ['cols'],
+                'Content': ['wysiwyg-text', 'product-grid'],
+                'Media': ['image', 'slider']
             },
+            'params': {
+                'cols': {
+                    'forceEditInView': true
+                },
+                'slider': {
+                    'forceEditInView': true
+                }
+            }
         }) }}
     </div>
 {% endblock %}

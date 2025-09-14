@@ -1,0 +1,14 @@
+pimcore:
+    documents:
+        doc_types:
+            definitions:
+                13ecf7db-8bed-42ed-938a-5a9dbcf70a80:
+                    name: 'Formbuilder Email'
+                    group: null
+                    controller: 'FormBuilderBundle\Controller\EmailController::emailAction'
+                    template: '@FormBuilder/email/email.html.twig'
+                    type: email
+                    priority: 0
+                    creationDate: 1756655094
+                    modificationDate: 1756655103
+                    staticGeneratorEnabled: false
